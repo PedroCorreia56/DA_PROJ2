@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <fstream>
 #include <cstring>
-#include "grafo.h"
+#include "grafo2.h"
 int main(){
 
     string grafofile("../input/in01.txt");//Ficheiro com o grafo

@@ -44,10 +44,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/c/Users/pedro/CLionProjects/DA_T2_G
+CMAKE_SOURCE_DIR = /mnt/c/Users/pedro/OneDrive/Documentos/GitHub/DA_PROJ2/DA_T2_G
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/c/Users/pedro/CLionProjects/DA_T2_G/cmake-build-debug
+CMAKE_BINARY_DIR = /mnt/c/Users/pedro/OneDrive/Documentos/GitHub/DA_PROJ2/DA_T2_G/cmake-build-debug
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -74,14 +74,14 @@ clean: CMakeFiles/DA_T2_G.dir/clean
 CMakeFiles/DA_T2_G.dir/all:
 	$(MAKE) -f CMakeFiles/DA_T2_G.dir/build.make CMakeFiles/DA_T2_G.dir/depend
 	$(MAKE) -f CMakeFiles/DA_T2_G.dir/build.make CMakeFiles/DA_T2_G.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/Users/pedro/CLionProjects/DA_T2_G/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target DA_T2_G"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=/mnt/c/Users/pedro/OneDrive/Documentos/GitHub/DA_PROJ2/DA_T2_G/cmake-build-debug/CMakeFiles --progress-num=1,2 "Built target DA_T2_G"
 .PHONY : CMakeFiles/DA_T2_G.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/DA_T2_G.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/pedro/CLionProjects/DA_T2_G/cmake-build-debug/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/pedro/OneDrive/Documentos/GitHub/DA_PROJ2/DA_T2_G/cmake-build-debug/CMakeFiles 2
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/DA_T2_G.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/pedro/CLionProjects/DA_T2_G/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/pedro/OneDrive/Documentos/GitHub/DA_PROJ2/DA_T2_G/cmake-build-debug/CMakeFiles 0
 .PHONY : CMakeFiles/DA_T2_G.dir/rule
 
 # Convenience name for target.
