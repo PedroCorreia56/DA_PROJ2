@@ -1,7 +1,9 @@
-#include "../include/Graph.h"
+#include "../codigo/Graph.h"
 
 Graph::Graph(int num, bool dir) : n(num), hasDir(dir), nodes(num+1) {
 }
+
+
 
 void Graph::addEdge(int src, int dest, int capacity, int hours) {
     if (src<1 || src>n || dest<1 || dest>n) return;

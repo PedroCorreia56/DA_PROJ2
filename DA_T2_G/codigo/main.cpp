@@ -5,7 +5,8 @@
 #include <stdio.h>
 #include <fstream>
 #include <cstring>
-#include "grafo2.h"
+#include "../codigo/Graph.h"
+using namespace std;
 int main(){
 
     string grafofile("../input/in01.txt");//Ficheiro com o grafo
@@ -17,28 +18,28 @@ int main(){
         cout<<"Erro ao abrir o ficheiro "<<endl;
     }
 
-    int temp=0;
     //leitura do grafo
+    std::getline(input_file,line);
+    char *dup = strdup(line.c_str());
+    int N=atoi(strtok(dup," "));//número de vértices
+    int R=atoi(strtok(NULL," "));//número de ramos
+
+
+    Graph grafo(N,true);
     while(std::getline(input_file,line)){
-        char *dup = strdup(line.c_str());
-
-        if(temp==0){
-            int N=atoi(strtok(dup," "));//número de vértices
-            int R=atoi(strtok(NULL," "));//número de ramos
-            criar grafo
-            Grafo=///
-            temp++;
-
-
-        }
-        else{
+        dup = strdup(line.c_str());
             int i = atoi(strtok(dup," "));
             int j = atoi(strtok(NULL," "));
             int capacidade = atoi(strtok(NULL," "));
             int duracao= atoi(strtok(NULL," "));
+
+            grafo.addEdge(i,j,capacidade,duracao);
+            //cout<<"Incial: "<<i<<" Destino: "<<j<<" Capacidade:"<<capacidade<<" Duracao:"<<duracao<<endl;
             free(dup);
-            guardar as merdas no grafo
         }
-    }
+
+
+    return 0;
 }
+
 
