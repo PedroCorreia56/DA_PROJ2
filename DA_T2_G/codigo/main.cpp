@@ -6,6 +6,7 @@
 #include <fstream>
 #include <cstring>
 #include "../codigo/Graph.h"
+#include "cenario1.h"
 using namespace std;
 int main(){
 
@@ -37,7 +38,10 @@ int main(){
             //cout<<"Incial: "<<i<<" Destino: "<<j<<" Capacidade:"<<capacidade<<" Duracao:"<<duracao<<endl;
             free(dup);
         }
-
+    //cout<<"NOS:"<<grafo.getNumNodes()<<endl;
+   MaxGroupSize(grafo,3,50);
+   ShortestPath(grafo,3,50);
+   // cout<<"Capacidade:"<<grafo.nodes.at(1).adj.begin()->cap<<" DEST:"<<grafo.nodes[1].adj.begin()->dest<<endl;
 
     return 0;
 }
