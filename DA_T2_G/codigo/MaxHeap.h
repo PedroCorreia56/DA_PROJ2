@@ -70,7 +70,7 @@ void MaxHeap<K,V>::swap(int i1, int i2) {
 
 // ----------------------------------------------
 
-// Create a min-heap for a max of n pairs (K,V) with notFound returned when empty
+// Create a max-heap for a max of n pairs (K,V) with notFound returned when empty
 template <class K, class V>
 MaxHeap<K,V>::MaxHeap(int n, const K& notFound) : KEY_NOT_FOUND(notFound), size(0), maxSize(n), a(n+1) {
 }

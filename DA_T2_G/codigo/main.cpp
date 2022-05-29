@@ -39,8 +39,8 @@ int main(){
             free(dup);
         }
     //cout<<"NOS:"<<grafo.getNumNodes()<<endl;
-   MaxGroupSize(grafo,1,9);
-   ShortestPath(grafo,1,9);
+   MaxGroupSize(grafo,9,5);
+   ShortestPath(grafo,9,5);
    // cout<<"Capacidade:"<<grafo.nodes.at(1).adj.begin()->cap<<" DEST:"<<grafo.nodes[1].adj.begin()->dest<<endl;
 
     return 0;
