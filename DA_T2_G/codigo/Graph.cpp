@@ -50,4 +50,16 @@ void Graph::clear(int nodesNum, bool dir) {
     nodes[nodesNum + 1];
 }
 
+//!Copy graph2 to graph1
+//! \param graph
+//! \return
+void Graph::DuplicateGraph(Graph *graph1,Graph graph2){
+
+    for (int i = 1; i <=graph2.getNumNodes() ; i++) {
+        for (auto e : graph2.nodes[i].adj) {
+            graph1->addEdge(i,e.dest,e.cap,e.horas);
+        }
+    }
+
+}
 

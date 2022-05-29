@@ -44,6 +44,7 @@ public:
     int getNumNodes();
 
     void clear(int nodesNum, bool dir = false);
+    void DuplicateGraph(Graph *graph1,Graph graph2);
 };
 
 #endif

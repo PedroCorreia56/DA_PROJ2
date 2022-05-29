@@ -23,7 +23,7 @@ void printpath(vector<int>& parent, int start, int end)
 
 }
 
-void MaxGroupSize(Graph graph,int start, int end){
+int MaxGroupSize(Graph graph,int start, int end){
 
     vector<int> capacidade(graph.getNumNodes()+1, INT_MIN);
 
@@ -50,11 +50,12 @@ void MaxGroupSize(Graph graph,int start, int end){
 
     if(capacidade[end]==INT_MAX || capacidade[end]==INT_MIN){
         cout<<"MAX SIZE:0 (mesmo vertice ou não existe ligação do inicial para o final)\n";
-        return;
+        return 0 ;
     }
     cout<<"The path:\n";
     printpath(parent,end,end);
-    cout<<"MAX CAPACITY:"<<capacidade[end]<<endl;
+    return capacidade[end];
+
 }
 
 
@@ -72,7 +73,7 @@ int minDist(Graph graph) // finding index of minimum distance
     }
     return ind;
 }
-void ShortestPath(Graph graph,int start, int end){
+int ShortestPath(Graph graph,int start, int end){
 
        vector<int> parent(graph.getNumNodes()+1, 0);
 
@@ -95,11 +96,12 @@ void ShortestPath(Graph graph,int start, int end){
 
     if(graph.nodes[end].distance==INT_MAX || start==end){
         cout<<"Distance:0 (mesmo vertice ou não existe ligação do inicial para o final)\n";
-        return;
+        return 0;
     }
 
     cout<<"The path:\n";
     printpath(parent,end,end);
-    cout<<"Distance:"<<graph.nodes[end].distance<<endl;
+    return graph.nodes[end].distance;
+   // cout<<"Distance:"<<graph.nodes[end].distance<<endl;
 }
 #endif //DA_T2_G_CENARIO1_H

@@ -7,10 +7,11 @@
 #include <cstring>
 #include "../codigo/Graph.h"
 #include "cenario1.h"
+#include "cenario2.h"
 using namespace std;
 int main(){
 
-    string grafofile("../input/in12.txt");//Ficheiro com o grafo
+    string grafofile("../input/in11.txt");//Ficheiro com o grafo
     string line;//string que guarda as linhas do ficheiro
 
     ifstream input_file(grafofile);
@@ -39,10 +40,10 @@ int main(){
             free(dup);
         }
     //cout<<"NOS:"<<grafo.getNumNodes()<<endl;
-   MaxGroupSize(grafo,9,5);
-   ShortestPath(grafo,9,5);
+  // cout<<"MAX CAPACITY:"<<MaxGroupSize(grafo,9,5)<<endl;
+ //  cout<<"Distance:"<<ShortestPath(grafo,9,5)<<endl;
    // cout<<"Capacidade:"<<grafo.nodes.at(1).adj.begin()->cap<<" DEST:"<<grafo.nodes[1].adj.begin()->dest<<endl;
-
+    MaxFlux(grafo,1,5,7);
     return 0;
 }
 
