@@ -41,6 +41,7 @@ void MaxGroupSize(Graph graph,int start, int end){
 
     while(heap.getSize()!=0){
       int t= heap.removeMax();
+
         for (auto w : graph.nodes[t].adj) {
                     if(min(capacidade[t],w.cap)>capacidade[w.dest]){
                         capacidade[w.dest]=min(capacidade[t],w.cap);
@@ -66,29 +67,61 @@ void printArr(Graph graph)
     for (int i = 1; i <= graph.getNumNodes(); i++)
         printf("%d \t\t %d\n", i, graph.nodes[i].distance);
 }
-void ShortestPath(Graph graph,int start, int end){
 
-    vector<int> parent(graph.getNumNodes()+1, 0);
-    MaxHeap<int,int> heap(graph.getNumNodes(),-1);
-    for (int i = 1; i <= graph.getNumNodes(); i++) {
-        graph.nodes[i].distance=INT_MAX;
-        graph.nodes[i].parent=0;
-        heap.insert(i,graph.nodes[i].distance);
-    }
-    graph.nodes[start].distance=0;
-    heap.increaseKey(start,0);
+int miniDist(Graph graph) // finding minimum distance
+{
+    int minimum=INT_MAX,ind;
 
-    while (heap.getSize()>0){
-        int t= heap.removeMax();
-        for(auto w : graph.nodes[t].adj){
-            if(heap.hasKey(w.dest) && graph.nodes[t].distance!=INT_MAX && ((w.cap+graph.nodes[t].distance)<graph.nodes[w.dest].distance)){
-                graph.nodes[w.dest].distance=w.cap+graph.nodes[t].distance;
-                graph.nodes[w.dest].parent=t;
-                parent[w.dest]=t;
-                heap.increaseKey(w.dest,graph.nodes[w.dest].distance);
-            }
+    for(int k=1;k<=graph.getNumNodes();k++)
+    {
+        if(graph.nodes[k].visited==false && graph.nodes[k].distance<=minimum)
+        {
+            minimum=graph.nodes[k].distance;
+            ind=k;
         }
     }
+    return ind;
+}
+void ShortestPath(Graph graph,int start, int end){
+
+       vector<int> parent(graph.getNumNodes()+1, 0);
+  //  MaxHeap<int,int> heap(graph.getNumNodes(),-1);
+
+
+      for (int i = 1; i <= graph.getNumNodes(); i++) {
+          graph.nodes[i].distance=INT_MAX;
+          graph.nodes[i].parent=0;
+          graph.nodes[i].visited=false;
+        //  heap.insert(i,graph.nodes[i].distance);
+      }
+      graph.nodes[start].distance=0;
+   //   heap.increaseKey(start,0);
+
+     /* while (heap.getSize()>0){
+          int t= heap.removeMax();
+          cout<<"T:"<<t<<endl;
+          for(auto w : graph.nodes[t].adj){
+              if(graph.nodes[t].distance!=INT_MAX && ((w.cap+graph.nodes[t].distance)<graph.nodes[w.dest].distance)){
+                  graph.nodes[w.dest].distance=w.cap+graph.nodes[t].distance;
+                  graph.nodes[w.dest].parent=t;
+                  parent[w.dest]=t;
+                  heap.increaseKey(w.dest,graph.nodes[w.dest].distance);
+              }
+          }
+      }*/
+    for (int i = 1; i <=graph.getNumNodes() ; i++) {
+                int m= miniDist(graph);
+                graph.nodes[m].visited=true;
+                for(auto k : graph.nodes[m].adj){
+                    if(!graph.nodes[k.dest].visited && graph.nodes[m].distance!=INT_MAX && ((k.cap+graph.nodes[m].distance)<graph.nodes[k.dest].distance)){
+                        graph.nodes[k.dest].distance=k.cap+graph.nodes[m].distance;
+                        //graph.nodes[k.dest].parent=m;
+                        parent[k.dest]=m;
+                    }
+                }
+    }
+
+
     printpath(parent,end,end);
    // printArr(graph);
     cout<<"\nDistance:"<<graph.nodes[end].distance<<endl;

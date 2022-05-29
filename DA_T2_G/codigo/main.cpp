@@ -10,7 +10,7 @@
 using namespace std;
 int main(){
 
-    string grafofile("../input/in01.txt");//Ficheiro com o grafo
+    string grafofile("../input/in12.txt");//Ficheiro com o grafo
     string line;//string que guarda as linhas do ficheiro
 
     ifstream input_file(grafofile);
@@ -39,8 +39,8 @@ int main(){
             free(dup);
         }
     //cout<<"NOS:"<<grafo.getNumNodes()<<endl;
-   MaxGroupSize(grafo,3,50);
-   ShortestPath(grafo,3,50);
+   MaxGroupSize(grafo,1,9);
+   ShortestPath(grafo,1,9);
    // cout<<"Capacidade:"<<grafo.nodes.at(1).adj.begin()->cap<<" DEST:"<<grafo.nodes[1].adj.begin()->dest<<endl;
 
     return 0;
