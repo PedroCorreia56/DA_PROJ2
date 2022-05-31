@@ -60,7 +60,12 @@ int main(){
   }
   cout<<"Enter the capacity:";
   cin>>c;
-    CreatePath(grafo,path);
+    if(!CreatePath(grafo,path,c)){
+        cout<<"Capacidade inicial dada não é possivel no caminho dado"<<endl;
+        return 0;
+    }
+    grafo.printgraph2();
+
 
 
   return 0;
