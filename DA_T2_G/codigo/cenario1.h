@@ -11,6 +11,11 @@
 #include "../codigo/MaxHeap.h"
 
 
+
+//! imprime caminho  
+//!\param parent - parent
+//!\param start - start
+//!\param end - end
 void printpath(vector<int>& parent, int start, int end)
 {
     if (start == 0) {
@@ -23,6 +28,10 @@ void printpath(vector<int>& parent, int start, int end)
 
 }
 
+//! cenario 1
+//!\param graph - graph
+//!\param start - start
+//!\param end - end
 int MaxGroupSize(Graph graph,int start, int end){
 
     vector<int> capacidade(graph.getNumNodes()+1, INT_MIN);
@@ -58,8 +67,9 @@ int MaxGroupSize(Graph graph,int start, int end){
 
 }
 
-
-int minDist(Graph graph) // finding index of minimum distance
+//! finding index of minimum distance
+//!\param graph - graph
+int minDist(Graph graph)
 {
     int minimum=INT_MAX,ind;
 
@@ -73,6 +83,12 @@ int minDist(Graph graph) // finding index of minimum distance
     }
     return ind;
 }
+
+
+//! cenario 1.2
+//!\param graph - graph
+//!\param start - start
+//!\param end - end
 int ShortestPath(Graph graph,int start, int end){
 
        vector<int> parent(graph.getNumNodes()+1, 0);
