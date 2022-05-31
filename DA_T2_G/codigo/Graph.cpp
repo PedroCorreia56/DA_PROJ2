@@ -7,8 +7,8 @@ Graph::Graph(int num, bool dir) : n(num), hasDir(dir), nodes(num+1) {
 
 void Graph::addEdge(int src, int dest, int capacity, int hours) {
     if (src<1 || src>n || dest<1 || dest>n) return;
-    nodes[src].adj.push_back({dest, capacity,hours});
-    if (!hasDir) nodes[dest].adj.push_back({src, capacity,hours});
+    nodes[src].adj.push_back({dest, capacity,hours,0});
+    if (!hasDir) nodes[dest].adj.push_back({src, capacity,hours,0});
 }
 
 void Graph::dfs(int v) {
@@ -36,6 +36,49 @@ void Graph::bfs(int v) {
         }
     }
 }
+bool Graph::bfs2(vector<vector<int>>& gf , int s, int t,  vector<int>& parent,int size)
+{
+    // Create a visited array and mark all vertices as not
+    // visited
+    bool visited[size];
+    for (int i = 0; i <size ; i++) {
+        visited[i]=false;
+    }
+
+    // Create a queue, enqueue source vertex and mark source
+    // vertex as visited
+    queue<int> q;
+    q.push(s);
+    visited[s] = true;
+    parent[s] = -1;
+
+    // Standard BFS Loop
+    while (!q.empty()) {
+        int u = q.front();
+        q.pop();
+
+        for (int v = 1; v < size; v++) {
+            if (visited[v] == false && gf[u][v] > 0) {
+                // If we find a connection to the sink node,
+                // then there is no point in BFS anymore We
+                // just have to set its parent and can return
+                // true
+                if (v == t) {
+                    parent[v] = u;
+                    return true;
+                }
+                q.push(v);
+                parent[v] = u;
+                visited[v] = true;
+            }
+        }
+    }
+
+    // We didn't reach sink in BFS starting from source, so
+    // return false
+    return false;
+}
+
 
 
 int Graph::getNumNodes() {
@@ -62,4 +105,26 @@ void Graph::DuplicateGraph(Graph *graph1,Graph graph2){
     }
 
 }
+bool Graph::EdgeExists(int start, int end) {
+    for (int i = 1; i <=this->getNumNodes() ; i++) {
+            for(auto e : this->nodes[i].adj){
+                if(i==start && e.dest==end)
+                    return true;
+            }
+    }
+    return false;
+}
 
+void Graph::printgraph() {
+    cout<<"ARESTA\t\tFLUXO/CAPACIDADE"<<endl;
+    for (int i = 1; i <=this->getNumNodes() ; i++){
+        for (auto e : this->nodes[i].adj) {
+
+                cout<<i<<":";
+                cout<<"-->"<<e.dest<<"\t\t"<<e.flux<<"/"<<e.cap;
+                cout<<endl;
+
+
+        }
+    }
+}

@@ -11,7 +11,7 @@
 using namespace std;
 int main(){
 
-    string grafofile("../input/in11.txt");//Ficheiro com o grafo
+    string grafofile("../input/in13.txt");//Ficheiro com o grafo
     string line;//string que guarda as linhas do ficheiro
 
     ifstream input_file(grafofile);
@@ -43,7 +43,8 @@ int main(){
   // cout<<"MAX CAPACITY:"<<MaxGroupSize(grafo,9,5)<<endl;
  //  cout<<"Distance:"<<ShortestPath(grafo,9,5)<<endl;
    // cout<<"Capacidade:"<<grafo.nodes.at(1).adj.begin()->cap<<" DEST:"<<grafo.nodes[1].adj.begin()->dest<<endl;
-    MaxFlux(grafo,1,5,7);
+   int flux =MaxFlux(grafo,2,6,24);
+   cout<<"FLUX:"<<flux<<endl;
     return 0;
 }
 

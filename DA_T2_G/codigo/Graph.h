@@ -15,6 +15,7 @@ class Graph {
         int dest;   // Destination node
         int cap;
         int horas;
+        int flux;
     };
 
     struct Node {
@@ -42,9 +43,11 @@ public:
     void bfs(int v);
 
     int getNumNodes();
-
+    static bool bfs2(vector<vector<int>>& gf , int s, int t,  vector<int>& parent,int size);
     void clear(int nodesNum, bool dir = false);
     void DuplicateGraph(Graph *graph1,Graph graph2);
+    bool EdgeExists(int start,int end);
+    void printgraph();
 };
 
 #endif
