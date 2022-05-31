@@ -63,10 +63,10 @@ bool Graph::bfs2(vector<vector<int>>& gf , int s, int t,  vector<int>& parent,in
                 // then there is no point in BFS anymore We
                 // just have to set its parent and can return
                 // true
-                if (v == t) {
+            /*    if (v == t) {
                     parent[v] = u;
                     return true;
-                }
+                }*/
                 q.push(v);
                 parent[v] = u;
                 visited[v] = true;
@@ -76,7 +76,7 @@ bool Graph::bfs2(vector<vector<int>>& gf , int s, int t,  vector<int>& parent,in
 
     // We didn't reach sink in BFS starting from source, so
     // return false
-    return false;
+    return (visited[t]==true);
 }
 
 
@@ -115,16 +115,28 @@ bool Graph::EdgeExists(int start, int end) {
     return false;
 }
 
-void Graph::printgraph() {
+//!Prints Graph before changing the flux
+void Graph::printgraph1() {
     cout<<"ARESTA\t\tFLUXO/CAPACIDADE"<<endl;
     for (int i = 1; i <=this->getNumNodes() ; i++){
         for (auto e : this->nodes[i].adj) {
-
                 cout<<i<<":";
                 cout<<"-->"<<e.dest<<"\t\t"<<e.flux<<"/"<<e.cap;
                 cout<<endl;
+        }
+    }
+}
 
-
+//!Prints Graph After Changing the flux
+void Graph::printgraph2() {
+    cout<<"ARESTA\t\tFLUXO/CAPACIDADE"<<endl;
+    for (int i = 1; i <=this->getNumNodes() ; i++){
+        for (auto e : this->nodes[i].adj) {
+                if(e.flux>0){
+                    cout<<i<<":";
+                    cout<<"-->"<<e.dest<<"\t\t"<<e.flux<<"/"<<e.cap;
+                    cout<<endl;
+                }
         }
     }
 }

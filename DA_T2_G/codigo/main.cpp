@@ -5,10 +5,12 @@
 #include <stdio.h>
 #include <fstream>
 #include <cstring>
+#include <vector>
 #include "../codigo/Graph.h"
 #include "cenario1.h"
 #include "cenario2.h"
 using namespace std;
+
 int main(){
 
     string grafofile("../input/in13.txt");//Ficheiro com o grafo
@@ -43,9 +45,25 @@ int main(){
   // cout<<"MAX CAPACITY:"<<MaxGroupSize(grafo,9,5)<<endl;
  //  cout<<"Distance:"<<ShortestPath(grafo,9,5)<<endl;
    // cout<<"Capacidade:"<<grafo.nodes.at(1).adj.begin()->cap<<" DEST:"<<grafo.nodes[1].adj.begin()->dest<<endl;
-   int flux =MaxFlux(grafo,2,6,24);
-   cout<<"FLUX:"<<flux<<endl;
-    return 0;
+//   int flux =FindPAth(grafo,2,6,21);
+  // cout<<"FLUX:"<<flux<<endl;
+  //int maxflux=MaxFlux(grafo,2,6)
+  //cout<<"Max Flux:"<<maxflux<<endl;
+
+  int p,c;
+    vector<int> path;
+    cout<<"Enter your path (press 0 to end):";
+    cin>>p;
+  while(p!=0){
+      path.push_back(p);
+      cin>>p;
+  }
+  cout<<"Enter the capacity:";
+  cin>>c;
+    CreatePath(grafo,path);
+
+
+  return 0;
 }
 
 

@@ -47,7 +47,8 @@ public:
     void clear(int nodesNum, bool dir = false);
     void DuplicateGraph(Graph *graph1,Graph graph2);
     bool EdgeExists(int start,int end);
-    void printgraph();
+    void printgraph1();
+    void printgraph2();
 };
 
 #endif

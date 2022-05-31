@@ -11,25 +11,78 @@
 #include "MaxHeap.h"
 #include "cenario1.h"
 
-int MaxFlux(Graph graph,int start,int end, int capacity){
+using namespace std;
+
+int MaxFlux(Graph graph,int start, int end){
 
     vector<vector<int>>gf( graph.getNumNodes()+1 , vector<int> (graph.getNumNodes()+1,0));
 
-    cout<<"GF[0][1]="<<gf[0][1]<<endl;
     cout<<"INITIAL:\n";
     cout<<"ARESTA\t\tFLUXO/CAPACIDADE"<<endl;
+
+
     for (int i = 1; i <=graph.getNumNodes() ; i++){
         for (auto e : graph.nodes[i].adj) {
-            cout<<i<<":";
+    //        cout<<i<<":";
             gf[i][e.dest]=e.cap;
-            cout<<"-->"<<e.dest<<"\t\t"<<e.flux<<"/"<<e.cap;
+      //      cout<<"-->"<<e.dest<<"\t\t"<<e.flux<<"/"<<e.cap;
             cout<<endl;
-
         }
     }
     vector<int> parent(graph.getNumNodes()+1, 0);
 
+    int v,u;
+    int max_flow = 0;
+    int used_flow=0;
+    while (Graph::bfs2(gf,start,end,parent,graph.getNumNodes()+1)) {
 
+        // Find minimum residual capacity of the edges along
+        // the path filled by BFS. Or we can say find the
+        // maximum flow through the path found.
+        int path_flow = INT_MAX;
+        for (v = end; v != start; v = parent[v]) {
+            u = parent[v];
+            //  cout<<v<<"<--";
+            path_flow = min(path_flow, gf[u][v]);
+        }
+
+        // update residual capacities of the edges and
+        // reverse edges along the path
+        for (v = end; v != start; v = parent[v]) {
+            u = parent[v];
+            //cout<<"BEFORE:"<<u<<"-->"<<v<<":"<<gf[u][v]<<endl;
+            gf[u][v] -= path_flow;
+            //cout<<"After:"<<u<<"-->"<<v<<":"<<gf[u][v]<<endl;
+            gf[v][u] += path_flow;
+        }
+        max_flow += path_flow;
+    }
+
+    // FILL FLUX
+    for (int i = 1; i <=graph.getNumNodes() ; i++){
+        for (auto & e : graph.nodes[i].adj) {
+            e.flux+=(e.cap-gf[i][e.dest]);
+        }
+    }
+    cout<<"\nFINAL:\n";
+    graph.printgraph2();
+    cout<<"MAX FLOW:"<<max_flow<<endl;
+    return max_flow;
+}
+
+
+int FindPath(Graph graph,int start,int end, int capacity){
+
+    vector<vector<int>>gf( graph.getNumNodes()+1 , vector<int> (graph.getNumNodes()+1,0));
+
+    cout<<"INITIAL:\n";
+    graph.printgraph1();
+    for (int i = 1; i <=graph.getNumNodes() ; i++){
+        for (auto e : graph.nodes[i].adj) {
+            gf[i][e.dest]=e.cap;
+        }
+    }
+    vector<int> parent(graph.getNumNodes()+1, 0);
 
 
     int v,u;
@@ -42,10 +95,10 @@ int MaxFlux(Graph graph,int start,int end, int capacity){
         int path_flow = INT_MAX;
         for (v = end; v != start; v = parent[v]) {
             u = parent[v];
-            cout<<v<<"<--";
+          //  cout<<v<<"<--";
             path_flow = min(path_flow, gf[u][v]);
         }
-        cout<<v<<" CApacity="<<path_flow;
+       // cout<<v<<" CApacity="<<path_flow;
         cout<<endl;
         int added_flow;
         if((max_flow+path_flow)<=capacity)
@@ -98,7 +151,7 @@ int MaxFlux(Graph graph,int start,int end, int capacity){
         }
     }
     cout<<"\nFINAL:\n";
-    graph.printgraph();
+    graph.printgraph2();
     cout<<"USED FLOW:"<<used_flow<<endl;
     cout<<"MAX FLOW:"<<max_flow<<endl;
     if(used_flow!=0)
@@ -107,5 +160,49 @@ int MaxFlux(Graph graph,int start,int end, int capacity){
         return max_flow;
 
 }
+void CreatePath(Graph& graph,vector<int> path){
 
+   /* path0->pat1
+    path1->path2
+    path2->path3
+    path3->path4
+**/
+   cout<<path[0]<<endl;
+   int cont=0;
+   int min=INT_MAX;
+    for (int i = path[cont]; i <=graph.getNumNodes() ; i=path[cont]) {
+      //  cout<<"I:"<<i<<endl;
+      //  cout<<"PATH INICIAL:"<<path[cont]<<endl;
+        for ( auto & e : graph.nodes[i].adj) {
+           // cout<<"CONT BEFORE:"<<cont<<endl;
+            if(e.dest==path[cont+1]){
+               // cout<<"ENTROU NO 1º IF"<<endl;
+                if(min>=e.cap){
+                    min=e.cap;
+                }
+                cont++;
+                cout<<i<<"-->"<<e.dest<<"  Cap:"<<e.cap<<endl;
+                break;
+            }
+
+        }
+        if(i==path[path.size()-1])
+            break;
+       // cout<<"CONT AFTER:"<<cont<<endl;
+       // cout<<"PATH FINAL:"<<path[cont]<<endl;
+
+    }
+    cout<<"MIN:"<<min<<endl;
+    return;
+}
+void UpdatePath(Graph& graph,int addedcapacity);
+    /** 2.4---Tempo minimo para reagrupar no destinho
+     * Um grupo vai ripo- 1-2-4-5
+     *  e outro 1-3-4-5
+     *  Quanto tempo no minimo para todos chegarem ao destino
+     * 2.5---- TEmpo maximo de espera dos locais
+     * Cada aresta só tem 1 autocarro
+     * Quanto tempo é que o grupo que chegou primeiro vai esperar e quanto vai esperar
+     * Indicar o(s) nó(s) onde se espera e o tempo de espera
+     */
 #endif //DA_T2_G_CENARIO2_H
