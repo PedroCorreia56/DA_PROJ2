@@ -40,22 +40,23 @@ int MaxGroupSize(Graph graph,int start, int end){
     vector<int> parent(graph.getNumNodes()+1, 0);
 
     MaxHeap<int,int> heap(graph.getNumNodes(),-1);
-    for (int i = 1; i <= graph.getNumNodes(); i++) {
+    for (int i = 1; i <= graph.getNumNodes(); i++) { // O(n)
         heap.insert(i,capacidade[i]);
     }
     capacidade[start]=INT_MAX;
     heap.increaseKey(start,INT_MAX);
 
     while(heap.getSize()!=0){
-      int t= heap.removeMax();
-        for (auto w : graph.nodes[t].adj) {
+      int t= heap.removeMax(); //O(n)
+        for (auto w : graph.nodes[t].adj) { // O(n)
                     if(min(capacidade[t],w.cap)>capacidade[w.dest]){
                         capacidade[w.dest]=min(capacidade[t],w.cap);
                         parent[w.dest]=t;
-                        heap.increaseKey(w.dest,capacidade[w.dest]);
+                        heap.increaseKey(w.dest,capacidade[w.dest]); // O(n)
                     }
         }
     }
+
 
     if(capacidade[end]==INT_MAX || capacidade[end]==INT_MIN){
         cout<<"MAX SIZE:0 (mesmo vertice ou não existe ligação do inicial para o final)\n";
@@ -64,8 +65,8 @@ int MaxGroupSize(Graph graph,int start, int end){
     cout<<"The path:\n";
     printpath(parent,end,end);
     return capacidade[end];
-
 }
+// Complexidade temporal O((|V| + |E|)log2 |V|);
 
 //! finding index of minimum distance
 //!\param graph - graph
@@ -99,10 +100,10 @@ int ShortestPath(Graph graph,int start, int end){
       }
       graph.nodes[start].distance=0;
 
-    for (int i = 1; i <=graph.getNumNodes() ; i++) {
+    for (int i = 1; i <=graph.getNumNodes() ; i++) { // O(n)
                 int m= minDist(graph);
                 graph.nodes[m].visited=true;
-                for(auto k : graph.nodes[m].adj){
+                for(auto k : graph.nodes[m].adj){ //O(n)
                     if(!graph.nodes[k.dest].visited && graph.nodes[m].distance!=INT_MAX && ((k.cap+graph.nodes[m].distance)<graph.nodes[k.dest].distance)){
                         graph.nodes[k.dest].distance=k.cap+graph.nodes[m].distance;
                         parent[k.dest]=m;
