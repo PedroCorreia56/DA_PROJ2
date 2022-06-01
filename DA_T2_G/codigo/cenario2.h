@@ -10,6 +10,7 @@
 #include "Graph.h"
 #include "MaxHeap.h"
 #include "cenario1.h"
+#include <stack>
 
 using namespace std;
 
@@ -23,10 +24,10 @@ int MaxFlux(Graph graph,int start, int end){
 
     for (int i = 1; i <=graph.getNumNodes() ; i++){
         for (auto e : graph.nodes[i].adj) {
-            cout<<i<<":";
+       //     cout<<i<<":";
             gf[i][e.dest]=e.cap;
-            cout<<"-->"<<e.dest<<"\t\t"<<e.flux<<"/"<<e.cap;
-            cout<<endl;
+        //    cout<<"-->"<<e.dest<<"\t\t"<<e.flux<<"/"<<e.cap;
+         //   cout<<endl;
         }
     }
     vector<int> parent(graph.getNumNodes()+1, 0);
@@ -62,7 +63,7 @@ int MaxFlux(Graph graph,int start, int end){
     for (int i = 1; i <=graph.getNumNodes() ; i++){
         for (auto & e : graph.nodes[i].adj) {
             e.flux+=(e.cap-gf[i][e.dest]);
-            cout<<"e.FLux"<<e.flux<<endl;
+         //   cout<<"e.FLux"<<e.flux<<endl;
         }
     }
     cout<<"\nFINAL:\n";
@@ -76,8 +77,8 @@ int FindPath(Graph& graph,int start,int end, int capacity){
 
     vector<vector<int>>gf( graph.getNumNodes()+1 , vector<int> (graph.getNumNodes()+1,0));
 
-    cout<<"INITIAL:\n";
-    graph.printgraph1();
+  //  cout<<"INITIAL:\n";
+  //  graph.printgraph1();
     for (int i = 1; i <=graph.getNumNodes() ; i++){
         for (auto e : graph.nodes[i].adj) {
        //     cout<<i<<":";
@@ -159,9 +160,9 @@ int FindPath(Graph& graph,int start,int end, int capacity){
         }
     }
     cout<<"\nFINAL:\n";
-   // graph.printgraph2();
+    graph.printgraph2();
     cout<<"USED FLOW:"<<used_flow<<endl;
-    cout<<"MAX FLOW:"<<max_flow<<endl;
+   // cout<<"MAX FLOW:"<<max_flow<<endl;
     if(used_flow!=0)
     return used_flow;
     else
@@ -302,6 +303,110 @@ void UpdatePath(Graph& graph,int initialcapacity,int addedcapacity,vector<int> p
 
     }
 
+
+
+}
+
+void CopyPathToGraph(Graph graph1,Graph& graph2){
+
+    for (int i = 1; i <=graph1.getNumNodes() ; i++) {
+        for (auto e : graph1.nodes[i].adj) {
+            // if(e.dest<=lastnode)
+            if(e.flux!=0)
+                graph2.addEdge(i,e.dest,e.cap,e.horas);
+        }
+    }
+
+
+}
+int EarliestStart(Graph graph){
+
+    vector<int> parent(graph.getNumNodes() +1, 0);
+    vector<int> ES(graph.getNumNodes() +1,0);
+    vector<int> GrauE(graph.getNumNodes() +1,0);
+    queue<int> S;
+
+    for (int i = 1; i <=graph.getNumNodes() ; i++) {
+        for (auto e : graph.nodes[i].adj) {
+                GrauE[e.dest]=GrauE[e.dest]+1;
+        }
+    }
+
+    for (int i =1; i <=graph.getNumNodes()  ; i++) {
+        if(GrauE[i]==0)
+            S.push(i);
+    }
+
+    int DurMin=-1;
+    int vf=0;
+    cout<<"S size:"<<S.size()<<endl;
+    while(S.size()!=0){
+        int v=S.front();
+        S.pop();
+        if(DurMin<ES[v]){
+            DurMin=ES[v];
+            vf=v;
+        }
+        for (auto w : graph.nodes[v].adj) {
+                if(ES[w.dest]<ES[v]+w.horas){
+                    ES[w.dest]=ES[v]+w.horas;
+                    parent[w.dest]=v;
+                }
+                GrauE[w.dest]=GrauE[w.dest]-1;
+                if(GrauE[w.dest]==0)
+                    S.push(w.dest);
+        }
+    }
+   // printpath(parent,vf,vf);
+    return DurMin;
+}
+
+int LatestFinish(Graph graph){
+
+    int DurMin= EarliestStart(graph);
+    vector<int> LF(graph.getNumNodes() +1,DurMin);
+    vector<int> GrauS(graph.getNumNodes() +1,0);
+    queue<int> S;
+
+    for (int i = 1; i <=graph.getNumNodes() ; i++) {
+        for (auto e : graph.nodes[i].adj) {
+            GrauS[e.dest]=GrauS[e.dest]+1;
+        }
+    }
+
+    Graph gt(graph.getNumNodes(),true);//Grafo transposto de graph
+
+    for (int i = 1; i <=graph.getNumNodes() ; i++) {
+        for (auto e : graph.nodes[i].adj) {
+            gt.addEdge(e.dest,i,e.cap,e.horas);
+        }
+    }
+   // cout<<"GT:\n";
+   // gt.printgraph1();
+
+    for (int i =1; i <=graph.getNumNodes()  ; i++) {
+        if(GrauS[i]==0)
+            S.push(i);
+    }
+
+    while(S.size()!=0){
+        int v=S.front();
+        S.pop();
+
+        for (auto w : gt.nodes[v].adj) {
+           if(LF[w.dest]>(LF[v]-w.horas))
+               LF[w.dest]=LF[v]-w.horas;
+           GrauS[w.dest]=GrauS[w.dest]-1;
+           if(GrauS[w.dest]==0)
+               S.push(w.dest);
+        }
+    }
+
+
+
+
+
+    return 0;
 
 
 }
