@@ -11,9 +11,9 @@
 #include "cenario2.h"
 using namespace std;
 
-int main(){
+int main(int argc, char ** argv){
 
-    string grafofile("../input/in13.txt");//Ficheiro com o grafo
+    string grafofile(argv[1]);//Ficheiro com o grafo
     string line;//string que guarda as linhas do ficheiro
 
     ifstream input_file(grafofile);
@@ -42,7 +42,8 @@ int main(){
             free(dup);
         }
     //cout<<"NOS:"<<grafo.getNumNodes()<<endl;
-  // cout<<"MAX CAPACITY:"<<MaxGroupSize(grafo,9,5)<<endl;
+     //int cap = MaxGroupSize(grafo,3,37);
+     cout <<"MAX CAPACITY:"<<MaxGroupSize(grafo,3,37)<<endl;
  //  cout<<"Distance:"<<ShortestPath(grafo,9,5)<<endl;
    // cout<<"Capacidade:"<<grafo.nodes.at(1).adj.begin()->cap<<" DEST:"<<grafo.nodes[1].adj.begin()->dest<<endl;
   // int flux =FindPath(grafo,1,6,22);
@@ -50,7 +51,7 @@ int main(){
   //int maxflux=MaxFlux(grafo,2,6)
   //cout<<"Max Flux:"<<maxflux<<endl;
 
-  int p,c;
+  /*int p,c;
     vector<int> path;
     cout<<"Enter your path (press 0 to end):";
     cin>>p;
@@ -70,7 +71,7 @@ int main(){
     cin>>added;
     UpdatePath(grafo,c,added,path);
  //   grafo.printgraph2();
-
+    */
     return 0;
 }
 

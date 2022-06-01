@@ -105,6 +105,8 @@ void Graph::DuplicateGraph(Graph *graph1,Graph graph2){
     }
 
 }
+
+//!
 bool Graph::EdgeExists(int start, int end) {
     for (int i = 1; i <=this->getNumNodes() ; i++) {
             for(auto e : this->nodes[i].adj){

@@ -1,0 +1,5 @@
+No caminho de 3 a 37, observamos o seguinte caminho
+3 -- 20 -- 37. A aresta de 3--20 tem capacidade 2 e a aresta de 20--37 tem capacidade 9.
+A sua capacidade máxima vai ser 2.
+Ao acrescentarmos uma aresta igual à primeira observada no caminho mas com capacidade máxima superior a 2, observamos 
+que o valor de se altera.
