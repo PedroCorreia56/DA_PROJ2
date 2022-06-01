@@ -42,7 +42,7 @@ int main(){
             free(dup);
         }
     //cout<<"NOS:"<<grafo.getNumNodes()<<endl;
-   //cout<<"MAX CAPACITY:"<<MaxGroupSize(grafo,1,300)<<endl;
+  // cout<<"MAX CAPACITY:"<<MaxGroupSize(grafo,9,5)<<endl;
  //  cout<<"Distance:"<<ShortestPath(grafo,9,5)<<endl;
    // cout<<"Capacidade:"<<grafo.nodes.at(1).adj.begin()->cap<<" DEST:"<<grafo.nodes[1].adj.begin()->dest<<endl;
   // int flux =FindPath(grafo,1,6,22);
