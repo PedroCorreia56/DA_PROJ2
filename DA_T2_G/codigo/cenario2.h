@@ -23,9 +23,9 @@ int MaxFlux(Graph graph,int start, int end){
 
     for (int i = 1; i <=graph.getNumNodes() ; i++){
         for (auto e : graph.nodes[i].adj) {
-    //        cout<<i<<":";
+            cout<<i<<":";
             gf[i][e.dest]=e.cap;
-      //      cout<<"-->"<<e.dest<<"\t\t"<<e.flux<<"/"<<e.cap;
+            cout<<"-->"<<e.dest<<"\t\t"<<e.flux<<"/"<<e.cap;
             cout<<endl;
         }
     }
@@ -62,6 +62,7 @@ int MaxFlux(Graph graph,int start, int end){
     for (int i = 1; i <=graph.getNumNodes() ; i++){
         for (auto & e : graph.nodes[i].adj) {
             e.flux+=(e.cap-gf[i][e.dest]);
+            cout<<"e.FLux"<<e.flux<<endl;
         }
     }
     cout<<"\nFINAL:\n";
@@ -71,7 +72,7 @@ int MaxFlux(Graph graph,int start, int end){
 }
 
 
-int FindPath(Graph graph,int start,int end, int capacity){
+int FindPath(Graph& graph,int start,int end, int capacity){
 
     vector<vector<int>>gf( graph.getNumNodes()+1 , vector<int> (graph.getNumNodes()+1,0));
 
@@ -79,7 +80,11 @@ int FindPath(Graph graph,int start,int end, int capacity){
     graph.printgraph1();
     for (int i = 1; i <=graph.getNumNodes() ; i++){
         for (auto e : graph.nodes[i].adj) {
-            gf[i][e.dest]=e.cap;
+       //     cout<<i<<":";
+        //    cout<<"-->"<<e.dest<<"\t\t"<<e.flux<<"/"<<e.cap;
+       //     cout<<endl;
+      //      cout<<"ECAP-EFLUX"<<e.cap-e.flux<<endl;
+            gf[i][e.dest]=e.cap-e.flux;
         }
     }
     vector<int> parent(graph.getNumNodes()+1, 0);
@@ -95,7 +100,7 @@ int FindPath(Graph graph,int start,int end, int capacity){
         int path_flow = INT_MAX;
         for (v = end; v != start; v = parent[v]) {
             u = parent[v];
-          //  cout<<v<<"<--";
+         //   cout<<v<<"<--";
             path_flow = min(path_flow, gf[u][v]);
         }
        // cout<<v<<" CApacity="<<path_flow;
@@ -124,14 +129,17 @@ int FindPath(Graph graph,int start,int end, int capacity){
         used_flow+=added_flow;
         // Add path flow to overall flow
         max_flow += path_flow;
-     //   CENA DO max_flow==CAPACIDADE STOP
     }
 
 
     // FILL FLUX
     for (int i = 1; i <=graph.getNumNodes() ; i++){
         for (auto & e : graph.nodes[i].adj) {
+            //Caso a aresta não tenha fluxo inicial
+            if (e.flux==0)
             e.flux+=(e.cap-gf[i][e.dest]);
+            else //Caso a aresta tenha fluxo inical
+                e.flux+=((e.cap-e.flux)-gf[i][e.dest]);
             /*if(e.flux<0){
                 cout<<"I:"<<i<<"-->"<<"e.dest:"<<e.dest<<" FLUXO:"<<e.flux<<endl;
                // cout<<"Entrou primeiro if\n";
@@ -151,7 +159,7 @@ int FindPath(Graph graph,int start,int end, int capacity){
         }
     }
     cout<<"\nFINAL:\n";
-    graph.printgraph2();
+   // graph.printgraph2();
     cout<<"USED FLOW:"<<used_flow<<endl;
     cout<<"MAX FLOW:"<<max_flow<<endl;
     if(used_flow!=0)
@@ -160,42 +168,58 @@ int FindPath(Graph graph,int start,int end, int capacity){
         return max_flow;
 
 }
+int FindMinCapacity(Graph graph, vector<int> path){
 
-//! Preenche, no grafo, as arestas dadas no path com o fluxo dado
+
+    int cont=0;
+    int min=INT_MAX;//Guarda a capacidade minima do percurso dado
+    int flag=0; //Se depois do segundo for continuar a 0, a aresta não existe
+    // Descobre a capacidade minima do percurso dado
+    for (int i = path[cont]; i <=graph.getNumNodes() ; i=path[cont]) {
+        flag=0;
+        //  cout<<"I:"<<i<<endl;
+        //  cout<<"PATH INICIAL:"<<path[cont]<<endl;
+        for ( auto  e : graph.nodes[i].adj) {
+            // cout<<"CONT BEFORE:"<<cont<<endl;
+            if(e.dest==path[cont+1]){
+                flag=1;
+                // cout<<"ENTROU NO 1º IF"<<endl;
+                if(min>=e.cap){
+                    min=e.cap;
+                }
+                cont++;
+               //  cout<<i<<"-->"<<e.dest<<"  Cap:"<<e.cap<<endl;
+                break;
+            }
+          //  cout<<i<<"-->"<<e.dest<<endl;
+        }
+
+        if(i==path[path.size()-1])
+            break;
+        if(flag!=1){
+            cout<<"Caminho não é possível (uma das arestas não existe)\n";
+            return 0;
+        }
+        // cout<<"CONT AFTER:"<<cont<<endl;
+        // cout<<"PATH FINAL:"<<path[cont]<<endl;
+    }
+    return min;
+}
+//! Preenche, no grafo dado, as arestas dadas no path com o fluxo dado
 //! \param graph- grafo
 //! \param path - caminho dado
 //! \param initialcapacity - fluxo que se quer usar
 //! \return true - Foi possível preencher as arestas com o fluxo dado
 //! \return false- Fluxo dado superior à capacidade minima do percurso dado
-bool CreatePath(Graph& graph,vector<int> path,int initialcapacity){
+bool FillPath(Graph& graph,vector<int> path,int initialcapacity){
 
-   int cont=0;
-   int min=INT_MAX;//Guarda a capacidade minima do percurso dado
 
-   // Descobre a capacidade minima do percurso dado
-    for (int i = path[cont]; i <=graph.getNumNodes() ; i=path[cont]) {
-      //  cout<<"I:"<<i<<endl;
-      //  cout<<"PATH INICIAL:"<<path[cont]<<endl;
-        for ( auto & e : graph.nodes[i].adj) {
-           // cout<<"CONT BEFORE:"<<cont<<endl;
-            if(e.dest==path[cont+1]){
-               // cout<<"ENTROU NO 1º IF"<<endl;
-                if(min>=e.cap){
-                    min=e.cap;
-                }
-                cont++;
-               // cout<<i<<"-->"<<e.dest<<"  Cap:"<<e.cap<<endl;
-                break;
-            }
-        }
-        if(i==path[path.size()-1])
-            break;
-       // cout<<"CONT AFTER:"<<cont<<endl;
-       // cout<<"PATH FINAL:"<<path[cont]<<endl;
-    }
+    int min= FindMinCapacity(graph,path);
+    if(min==0)
+        return false;
     int added_flow;//Serve para ver o fluxo que vai ser adicionado às arestas usadas
 
-    // A capacidade initial não pode ser maior que a capacidade mínima
+    // A capacidade inicial não pode ser maior que a capacidade mínima
     if(initialcapacity>min)
         return false;
     else if(min>initialcapacity)
@@ -203,7 +227,7 @@ bool CreatePath(Graph& graph,vector<int> path,int initialcapacity){
     else
         added_flow=min;
 
-    cont=0;
+    int cont=0;
     //Prenche as arestas usadas com o fluxo usado no caminho
     for (int i = path[cont]; i <=graph.getNumNodes() ; i=path[cont]) {
         for ( auto & e : graph.nodes[i].adj) {
@@ -222,7 +246,66 @@ bool CreatePath(Graph& graph,vector<int> path,int initialcapacity){
   //  cout<<"MIN:"<<min<<endl;
     return true;
 }
-void UpdatePath(Graph& graph,int addedcapacity);
+void UpdatePath(Graph& graph,int initialcapacity,int addedcapacity,vector<int> path){
+
+    if(addedcapacity==0)
+        return;
+    int start=path[0];
+    int end=path[path.size()-1];
+
+    int min= FindMinCapacity(graph,path);
+
+    //Caso o fluxo adicional ainda caiba no caminho usado
+    if(addedcapacity<=(min-initialcapacity)){
+        cout<<"AdedCpacity:"<<addedcapacity<<" MIN-INCP="<<min-initialcapacity<<endl;
+        int cont=0;
+        //Prenche as arestas usadas com o fluxo extra
+        for (int i = path[cont]; i <=graph.getNumNodes() ; i=path[cont]) {
+            for ( auto & e : graph.nodes[i].adj) {
+                if(e.dest==path[cont+1]){
+                    e.flux+=addedcapacity;
+                    cont++;
+                    break;
+                }
+            }
+            if(i==path[path.size()-1])
+                break;
+        }
+
+        return;
+    }
+    else{
+
+        int missingflux=min-initialcapacity; // FLUXO que ainda cabe no caminho usado
+        int remaingflux=addedcapacity-missingflux; // FLUXO que sobra
+        cout<<"MISSINGFLUX:"<<missingflux<<" REMAINGFLUX:"<<remaingflux<<endl;
+        int cont=0;
+
+        //Prenche as arestas usadas com o fluxo extra
+        for (int i = path[cont]; i <=graph.getNumNodes() ; i=path[cont]) {
+
+            for ( auto & e : graph.nodes[i].adj) {
+                if(e.dest==path[cont+1]){
+                    e.flux+=missingflux;
+                    cont++;
+                    break;
+                }
+            }
+            if(i==path[path.size()-1])
+                break;
+        }
+
+        int flux= FindPath(graph,start,end,remaingflux);
+        graph.printgraph2();
+        cout<<"FLUX WANTED:"<<initialcapacity+addedcapacity<<endl;
+        cout<<"Flux used:"<<flux+initialcapacity+missingflux<<endl;
+
+    }
+
+
+
+}
+
     /** 2.4---Tempo minimo para reagrupar no destinho
      * Um grupo vai ripo- 1-2-4-5
      *  e outro 1-3-4-5

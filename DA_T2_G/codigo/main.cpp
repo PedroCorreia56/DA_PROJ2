@@ -45,8 +45,8 @@ int main(){
   // cout<<"MAX CAPACITY:"<<MaxGroupSize(grafo,9,5)<<endl;
  //  cout<<"Distance:"<<ShortestPath(grafo,9,5)<<endl;
    // cout<<"Capacidade:"<<grafo.nodes.at(1).adj.begin()->cap<<" DEST:"<<grafo.nodes[1].adj.begin()->dest<<endl;
-//   int flux =FindPAth(grafo,2,6,21);
-  // cout<<"FLUX:"<<flux<<endl;
+  // int flux =FindPath(grafo,1,6,22);
+   //cout<<"FLUX:"<<flux<<endl;
   //int maxflux=MaxFlux(grafo,2,6)
   //cout<<"Max Flux:"<<maxflux<<endl;
 
@@ -60,15 +60,18 @@ int main(){
   }
   cout<<"Enter the capacity:";
   cin>>c;
-    if(!CreatePath(grafo,path,c)){
+    if(!FillPath(grafo,path,c)){
         cout<<"Capacidade inicial dada não é possivel no caminho dado"<<endl;
         return 0;
     }
     grafo.printgraph2();
+    int added;
+    cout<<"Enter the capacity you want to add:";
+    cin>>added;
+    UpdatePath(grafo,c,added,path);
+ //   grafo.printgraph2();
 
-
-
-  return 0;
+    return 0;
 }
 
 
