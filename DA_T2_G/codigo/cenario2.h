@@ -319,7 +319,7 @@ void CopyPathToGraph(Graph graph1,Graph& graph2){
 
 
 }
-int EarliestStart(Graph graph){
+pair<int,vector<int> > EarliestStart(Graph graph){
 
     vector<int> parent(graph.getNumNodes() +1, 0);
     vector<int> ES(graph.getNumNodes() +1,0);
@@ -339,7 +339,7 @@ int EarliestStart(Graph graph){
 
     int DurMin=-1;
     int vf=0;
-    cout<<"S size:"<<S.size()<<endl;
+   // cout<<"S size:"<<S.size()<<endl;
     while(S.size()!=0){
         int v=S.front();
         S.pop();
@@ -358,21 +358,17 @@ int EarliestStart(Graph graph){
         }
     }
    // printpath(parent,vf,vf);
-    return DurMin;
+    return {DurMin,ES};
 }
 
-int LatestFinish(Graph graph){
+void LatestFinish(Graph graph,int wantednode){
 
-    int DurMin= EarliestStart(graph);
+    int DurMin= EarliestStart(graph).first;
+    vector<int> ES=EarliestStart(graph).second;
     vector<int> LF(graph.getNumNodes() +1,DurMin);
+
     vector<int> GrauS(graph.getNumNodes() +1,0);
     queue<int> S;
-
-    for (int i = 1; i <=graph.getNumNodes() ; i++) {
-        for (auto e : graph.nodes[i].adj) {
-            GrauS[e.dest]=GrauS[e.dest]+1;
-        }
-    }
 
     Graph gt(graph.getNumNodes(),true);//Grafo transposto de graph
 
@@ -381,19 +377,29 @@ int LatestFinish(Graph graph){
             gt.addEdge(e.dest,i,e.cap,e.horas);
         }
     }
+
+    for (int i = 1; i <=gt.getNumNodes() ; i++) {
+        for (auto e : gt.nodes[i].adj) {
+            GrauS[e.dest]=GrauS[e.dest]+1;
+        }
+    }
    // cout<<"GT:\n";
-   // gt.printgraph1();
+  //  gt.printgraph1();
 
     for (int i =1; i <=graph.getNumNodes()  ; i++) {
-        if(GrauS[i]==0)
+      //  cout<<"i:"<<i<<" GRAU:"<<GrauS[i]<<endl;
+        if(GrauS[i]==0){
+         //   cout<<"DEU PUSH\n";
             S.push(i);
-    }
+        }
 
-    while(S.size()!=0){
+    }
+   // cout<<"S EMPRY::"<<S.empty()<<endl;
+    while(!S.empty()){
         int v=S.front();
         S.pop();
-
         for (auto w : gt.nodes[v].adj) {
+           // cout<<"W:dest:"<<w.dest<<endl;
            if(LF[w.dest]>(LF[v]-w.horas))
                LF[w.dest]=LF[v]-w.horas;
            GrauS[w.dest]=GrauS[w.dest]-1;
@@ -401,12 +407,41 @@ int LatestFinish(Graph graph){
                S.push(w.dest);
         }
     }
+    /*for (int i = 1; i <=graph.getNumNodes() ; i++) {
+        cout<<"LF["<<i<<"]:"<<LF[i]<<endl;
+    }*/
+    vector<int> NodeWaitTime(graph.getNumNodes()+1,0);
+    for (int i = 1; i <=gt.getNumNodes() ; i++) {
+        for (auto e : graph.nodes[i].adj) {
+            int max=ES[e.dest]-ES[i]-e.horas;
+                    if(NodeWaitTime[e.dest]<max){
+                        NodeWaitTime[e.dest]=max;
+                    }
+        }
+    }
 
+    int MaxWaitTime=INT_MIN;
 
+    for(int i=1; i<=graph.getNumNodes();i++){
+        if(MaxWaitTime<NodeWaitTime[i])
+            MaxWaitTime=NodeWaitTime[i];
+    }
 
+    vector<int> NodesStoped;
+    for(int i=1; i<=graph.getNumNodes();i++){
+        if(MaxWaitTime==NodeWaitTime[i])
+            NodesStoped.push_back(i);
+    }
 
+    cout<<"MAximo tempo de espera:"<<MaxWaitTime<<endl;
+    cout<<"Isso aconteceu em:"<<NodesStoped.size()<<" nó(s)\n";
+    cout <<" Nó(s):";
+    for (auto i : NodesStoped) {
+        cout<<i<<" ";
+    }
+    cout<<endl;
 
-    return 0;
+    //return LF[wantednode];
 
 
 }

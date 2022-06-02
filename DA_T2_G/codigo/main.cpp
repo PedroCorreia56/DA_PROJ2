@@ -13,7 +13,7 @@ using namespace std;
 
 int main(){
 
-    string grafofile("../input/in13.txt");//Ficheiro com o grafo
+    string grafofile("../input/in14.txt");//Ficheiro com o grafo
     string line;//string que guarda as linhas do ficheiro
 
     ifstream input_file(grafofile);
@@ -71,7 +71,7 @@ int main(){
     UpdatePath(grafo,c,added,path);
  //   grafo.printgraph2();
 */
-
+/*
 int start,end,groupsize;
     cout<<"Enter the starting node:";
     cin>>start;
@@ -83,18 +83,19 @@ int start,end,groupsize;
         cout<<"Algo deu errado\n";
         return 0;
     }
-
-    Graph teste(grafo.getNumNodes(),true);
-    CopyPathToGraph(grafo,teste);
+*/
+    //Graph teste(grafo.getNumNodes(),true);
+    //CopyPathToGraph(grafo,teste);
     cout<<"GRAFO DE TESTES\n";
   //  teste.printgraph1();
-   // int es= EarliestStart(teste);
-  //  if(es==0 || es==-1){
-   //     cout<<"DEU ERRO\n";
-   //     return 0;
-   // }
-    //cout<<"Earliest Start:"<<es<<endl;
-    int lf= LatestFinish(teste);
+    int es= EarliestStart(grafo).first;
+    if(es==0 || es==-1){
+        cout<<"DEU ERRO\n";
+        return 0;
+    }
+    cout<<"Earliest Start:"<<es<<endl;
+    LatestFinish(grafo,5);
+
     return 0;
 }
 
