@@ -297,7 +297,14 @@ void UpdatePath(Graph& graph,int initialcapacity,int addedcapacity,vector<int> p
         }
 
         int flux= FindPath(graph,start,end,remaingflux);
-        graph.printgraph2();
+        if((initialcapacity+addedcapacity)==(flux+initialcapacity+missingflux)){
+            graph.printgraph2();
+            cout<<"Adição concluída\n";
+        }
+        else{
+            cout<<"Não é possível realizar a adição\n";
+        }
+
         cout<<"FLUX WANTED:"<<initialcapacity+addedcapacity<<endl;
         cout<<"Flux used:"<<flux+initialcapacity+missingflux<<endl;
 
@@ -363,9 +370,8 @@ pair<int,vector<int> > EarliestStart(Graph graph){
 
 void LatestFinish(Graph graph,int wantednode){
 
-    int DurMin= EarliestStart(graph).first;
-    vector<int> ES=EarliestStart(graph).second;
-    vector<int> LF(graph.getNumNodes() +1,DurMin);
+
+/*    vector<int> LF(graph.getNumNodes() +1,DurMin);
 
     vector<int> GrauS(graph.getNumNodes() +1,0);
     queue<int> S;
@@ -407,13 +413,15 @@ void LatestFinish(Graph graph,int wantednode){
                S.push(w.dest);
         }
     }
-    /*for (int i = 1; i <=graph.getNumNodes() ; i++) {
-        cout<<"LF["<<i<<"]:"<<LF[i]<<endl;
-    }*/
+    */
+    int DurMin= EarliestStart(graph).first;
+    vector<int> ES=EarliestStart(graph).second; // Recebe o array que contem o Earliest Start de cada nó
+
     vector<int> NodeWaitTime(graph.getNumNodes()+1,0);
-    for (int i = 1; i <=gt.getNumNodes() ; i++) {
+    //Calcula o máximo tempo de espera de cada nó
+    for (int i = 1; i <=graph.getNumNodes() ; i++) {
         for (auto e : graph.nodes[i].adj) {
-            int max=ES[e.dest]-ES[i]-e.horas;
+            int max=ES[e.dest]-ES[i]-e.horas; // Tempo de espera= ES[nó atual] - (ES[nó anterior] + duração da aresta)
                     if(NodeWaitTime[e.dest]<max){
                         NodeWaitTime[e.dest]=max;
                     }
@@ -421,7 +429,6 @@ void LatestFinish(Graph graph,int wantednode){
     }
 
     int MaxWaitTime=INT_MIN;
-
     for(int i=1; i<=graph.getNumNodes();i++){
         if(MaxWaitTime<NodeWaitTime[i])
             MaxWaitTime=NodeWaitTime[i];
@@ -441,7 +448,6 @@ void LatestFinish(Graph graph,int wantednode){
     }
     cout<<endl;
 
-    //return LF[wantednode];
 
 
 }

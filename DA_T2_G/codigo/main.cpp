@@ -47,9 +47,9 @@ int main(){
    // cout<<"Capacidade:"<<grafo.nodes.at(1).adj.begin()->cap<<" DEST:"<<grafo.nodes[1].adj.begin()->dest<<endl;
   // int flux =FindPath(grafo,1,6,22);
    //cout<<"FLUX:"<<flux<<endl;
-  //int maxflux=MaxFlux(grafo,1,300);
-  //cout<<"Max Flux:"<<maxflux<<endl;
-/*
+  int maxflux=MaxFlux(grafo,1,7);
+  cout<<"Max Flux:"<<maxflux<<endl;
+
   int p,c;
     vector<int> path;
     cout<<"Enter your path (press 0 to end):";
@@ -70,7 +70,7 @@ int main(){
     cin>>added;
     UpdatePath(grafo,c,added,path);
  //   grafo.printgraph2();
-*/
+
 /*
 int start,end,groupsize;
     cout<<"Enter the starting node:";
@@ -86,16 +86,16 @@ int start,end,groupsize;
 */
     //Graph teste(grafo.getNumNodes(),true);
     //CopyPathToGraph(grafo,teste);
-    cout<<"GRAFO DE TESTES\n";
+   // cout<<"GRAFO DE TESTES\n";
   //  teste.printgraph1();
-    int es= EarliestStart(grafo).first;
+   /* int es= EarliestStart(grafo).first;
     if(es==0 || es==-1){
         cout<<"DEU ERRO\n";
         return 0;
     }
     cout<<"Earliest Start:"<<es<<endl;
     LatestFinish(grafo,5);
-
+*/
     return 0;
 }
 
