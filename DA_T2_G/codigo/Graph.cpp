@@ -63,10 +63,10 @@ bool Graph::bfs2(vector<vector<int>>& gf , int s, int t,  vector<int>& parent,in
                 // then there is no point in BFS anymore We
                 // just have to set its parent and can return
                 // true
-            /*    if (v == t) {
+               if (v == t) {
                     parent[v] = u;
                     return true;
-                }*/
+                }
                 q.push(v);
                 parent[v] = u;
                 visited[v] = true;

@@ -14,61 +14,57 @@
 
 using namespace std;
 
-int MaxFlux(Graph graph,int start, int end){
+int MaxFlux(Graph& graph,int start, int end){
 
-    vector<vector<int>>gf( graph.getNumNodes()+1 , vector<int> (graph.getNumNodes()+1,0));
-
-    cout<<"INITIAL:\n";
-    cout<<"ARESTA\t\tFLUXO/CAPACIDADE"<<endl;
+    if(start <=0 || start>graph.getNumNodes() || end <=0 || end>graph.getNumNodes() || start==end)
+        return 0;
 
 
+    vector<vector<int>>gf( graph.getNumNodes()+1 , vector<int> (graph.getNumNodes()+1,0));//Grafo Residual
+
+    //Copia o grafo original para o Grafo Residual
     for (int i = 1; i <=graph.getNumNodes() ; i++){
         for (auto e : graph.nodes[i].adj) {
-       //     cout<<i<<":";
             gf[i][e.dest]=e.cap;
-        //    cout<<"-->"<<e.dest<<"\t\t"<<e.flux<<"/"<<e.cap;
-         //   cout<<endl;
         }
     }
+    //Vetor para guardar os caminhos usados
     vector<int> parent(graph.getNumNodes()+1, 0);
 
-    int v,u;
-    int max_flow = 0;
-    int used_flow=0;
+    int v,u;//variavéis de apoio
+    int max_flow = 0;//Guarda o fluxo máximo utilizado
+
+    // Descobre o fluxo máximo.
+    // O ciclo corre enquanto existir caminho do Vértice Inicial até o Vértice final no Grafo Residual
     while (Graph::bfs2(gf,start,end,parent,graph.getNumNodes()+1)) {
 
-        // Find minimum residual capacity of the edges along
-        // the path filled by BFS. Or we can say find the
-        // maximum flow through the path found.
-        int path_flow = INT_MAX;
+
+        //Encontra a capacidade residual mínima do caminho encontrado no BFS
+        int path_flow = INT_MAX;//Guarda a capacidade residual mínima do caminho
         for (v = end; v != start; v = parent[v]) {
             u = parent[v];
-            //  cout<<v<<"<--";
             path_flow = min(path_flow, gf[u][v]);
         }
 
-        // update residual capacities of the edges and
-        // reverse edges along the path
+        //Atualiza a capacidade residual das arestas normais e
+        // das arestas inversas ao longo do caminho
         for (v = end; v != start; v = parent[v]) {
             u = parent[v];
-            //cout<<"BEFORE:"<<u<<"-->"<<v<<":"<<gf[u][v]<<endl;
             gf[u][v] -= path_flow;
-            //cout<<"After:"<<u<<"-->"<<v<<":"<<gf[u][v]<<endl;
             gf[v][u] += path_flow;
         }
         max_flow += path_flow;
     }
 
-    // FILL FLUX
+    // Atualiza o fluxo das arestas do grafo original
     for (int i = 1; i <=graph.getNumNodes() ; i++){
         for (auto & e : graph.nodes[i].adj) {
             e.flux+=(e.cap-gf[i][e.dest]);
-         //   cout<<"e.FLux"<<e.flux<<endl;
         }
     }
-    cout<<"\nFINAL:\n";
-    graph.printgraph2();
-    cout<<"MAX FLOW:"<<max_flow<<endl;
+
+    //graph.printgraph2();
+   // cout<<"MAX FLOW:"<<max_flow<<endl;
     return max_flow;
 }
 
@@ -368,52 +364,8 @@ pair<int,vector<int> > EarliestStart(Graph graph){
     return {DurMin,ES};
 }
 
-void LatestFinish(Graph graph,int wantednode){
+void cenario2_5(Graph graph,int wantednode){
 
-
-/*    vector<int> LF(graph.getNumNodes() +1,DurMin);
-
-    vector<int> GrauS(graph.getNumNodes() +1,0);
-    queue<int> S;
-
-    Graph gt(graph.getNumNodes(),true);//Grafo transposto de graph
-
-    for (int i = 1; i <=graph.getNumNodes() ; i++) {
-        for (auto e : graph.nodes[i].adj) {
-            gt.addEdge(e.dest,i,e.cap,e.horas);
-        }
-    }
-
-    for (int i = 1; i <=gt.getNumNodes() ; i++) {
-        for (auto e : gt.nodes[i].adj) {
-            GrauS[e.dest]=GrauS[e.dest]+1;
-        }
-    }
-   // cout<<"GT:\n";
-  //  gt.printgraph1();
-
-    for (int i =1; i <=graph.getNumNodes()  ; i++) {
-      //  cout<<"i:"<<i<<" GRAU:"<<GrauS[i]<<endl;
-        if(GrauS[i]==0){
-         //   cout<<"DEU PUSH\n";
-            S.push(i);
-        }
-
-    }
-   // cout<<"S EMPRY::"<<S.empty()<<endl;
-    while(!S.empty()){
-        int v=S.front();
-        S.pop();
-        for (auto w : gt.nodes[v].adj) {
-           // cout<<"W:dest:"<<w.dest<<endl;
-           if(LF[w.dest]>(LF[v]-w.horas))
-               LF[w.dest]=LF[v]-w.horas;
-           GrauS[w.dest]=GrauS[w.dest]-1;
-           if(GrauS[w.dest]==0)
-               S.push(w.dest);
-        }
-    }
-    */
     int DurMin= EarliestStart(graph).first;
     vector<int> ES=EarliestStart(graph).second; // Recebe o array que contem o Earliest Start de cada nó
 
@@ -430,7 +382,7 @@ void LatestFinish(Graph graph,int wantednode){
 
     int MaxWaitTime=INT_MIN;
     for(int i=1; i<=graph.getNumNodes();i++){
-        if(MaxWaitTime<NodeWaitTime[i])
+        if(MaxWaitTime<=NodeWaitTime[i])
             MaxWaitTime=NodeWaitTime[i];
     }
 
@@ -447,8 +399,6 @@ void LatestFinish(Graph graph,int wantednode){
         cout<<i<<" ";
     }
     cout<<endl;
-
-
 
 }
 
