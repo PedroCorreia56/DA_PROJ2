@@ -170,7 +170,6 @@ int main(){
         cout<<"Indique o vértice de origem e o vértice de destino:";
         cin>>start>>end;
 
-
         int maxflux=MaxFlux(grafo,start,end);
         if(maxflux==0){
             cout<<"Erro nos dados inseridos, nós não existem ou não existe ligação entre os dois\n";
@@ -178,25 +177,7 @@ int main(){
         }
         cout<<"Caminho a ser usado:\n";
         grafo.printgraph3();
-
-struct timespec starta, enda;
-        clock_gettime(CLOCK_MONOTONIC, &starta);
-
-        ios_base::sync_with_stdio(false);
-        int temporeunir= EarliestStart(grafo,start,end).first;
-        clock_gettime(CLOCK_MONOTONIC, &enda);
-        double time_taken;
-        time_taken = (enda.tv_sec - starta.tv_sec) * 1e9;
-        time_taken = (time_taken + (enda.tv_nsec - starta.tv_nsec)) * 1e-9;
-
-        cout << "Time taken by program is : " << fixed
-             << time_taken << setprecision(9);
-        cout << " sec" << endl;
-        if(temporeunir==-1 || temporeunir==0){
-            cout<<"Erro nos dados inseridos, nós não existem ou não existe ligação entre os dois\n";
-            return 0;
-        }
-        cout<<"Tempo que se reunem: "<<temporeunir<<"h"<<endl;
+        cenario2_5(grafo,start,end);
 
     }
     else{
