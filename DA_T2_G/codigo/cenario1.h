@@ -12,10 +12,10 @@
 #include <map>
 
 
-//! imprime caminho  
-//!\param parent - parent
-//!\param start - start
-//!\param end - end
+//! imprime caminho  em parent
+//!\param parent - caminho
+//!\param start - vértice de origem
+//!\param end - vértice destino
 void printpath(vector<int>& parent, int start, int end)
 {
     if (start == 0) {
@@ -28,18 +28,21 @@ void printpath(vector<int>& parent, int start, int end)
 
 }
 
-//! cenario 1.1
-//!\param graph - graph
-//!\param start - start
-//!\param end - end
+//! Descobre o caminho com a máxima capaciade mínima
+//!\param graph - grafo com os caminhos disponíveis
+//!\param start - vértice de origem
+//!\param end - vértice de destino
+//! \return int - capacidade máxima do vértice de destino ou 0 em caso de erro
+//! \return vector<int> - Caminho que contem a máxima capaciade mínima
 pair<int,vector<int>> MaxGroupSize(Graph graph,int start, int end){
 
-
+    //Array que guarda a máxima capaciade mínima de cada vértice
     vector<int> capacidade(graph.getNumNodes()+1, INT_MIN);
 
-    // To get the path at the end of the algorithm
+    //Vetor para guardar o caminho usado
     vector<int> parent(graph.getNumNodes()+1, 0);
 
+    //heap para guardar no topo o vértice com maior capacidade
     MaxHeap<int,int> heap(graph.getNumNodes(),-1);
     for (int i = 1; i <= graph.getNumNodes(); i++) { // O(n)
         heap.insert(i,capacidade[i]);
@@ -47,6 +50,7 @@ pair<int,vector<int>> MaxGroupSize(Graph graph,int start, int end){
     capacidade[start]=INT_MAX;
     heap.increaseKey(start,INT_MAX);
 
+    //Descobre máxima capaciade mínima de cada vértice
     while(heap.getSize()!=0){
       int t= heap.removeMax(); //O(n)
         for (auto w : graph.nodes[t].adj) { // O(n)
@@ -58,22 +62,33 @@ pair<int,vector<int>> MaxGroupSize(Graph graph,int start, int end){
         }
     }
 
+    //Caso de erro
     if(capacidade[end]==INT_MAX || capacidade[end]==INT_MIN){
         return {0,parent} ;
     }
     return {capacidade[end],parent};
 }
 
+//! Descobre se existe um melhor par capacidade+numero_de_nós que a capacidade atual
+//! \param caminhos - map que contêm em key a capaciade de um caminho e no value o vetor com o caminho associado a essa capacidade
+//! \param numeronos - map que contêm em key a capaciade de um caminho e no value o número de nós usados nessa capacidade
+//! \param current  - capacidade que se quer testar
+//! \return true - Existe uma melhor combinação de capacidade+numero_de_nós
+//! \return false - Não existe uma melhor combinação de capacidade+numero_de_nós
 bool BetterPath(map<int,vector<int>> caminhos,map<int,int> numeronos,int current) {
 
     for (auto itr = caminhos.begin(); itr != caminhos.end(); itr++) {
+        //Só começa a ver as capacidades superiores à current
         if(itr->first<current)
             continue;
         auto temp=itr;
         for (auto i=++temp; i!= caminhos.end(); i++) {
+
+                //Caso a capacidade seja maior e tenha o mesmo número de nós
                 if(i->first>itr->first && numeronos[i->first]==numeronos[itr->first]){
                     return true;
                 }
+                //Caso a capacidade seja maior e tenha um menor número de nós
                 else if( i->first>itr->first && numeronos[i->first]<=numeronos[itr->first]){
                     return true;
                 }
@@ -189,7 +204,7 @@ bool cenario1_2(Graph graph, int start, int end) {
         cout << endl;
     }
 
-
+    //Obter o caminho com a maior capacidade
     parent=MaxGroupSize(graph,start,end).second;
 
     // Se a capacidade maxima não existir no map caminhos dar print a ela

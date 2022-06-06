@@ -10,7 +10,7 @@
 
 using namespace std;
 
-// Binary min-heap to represent integer keys of type K with values (priorities) of type V
+// Binary max-heap to represent integer keys of type K with values (priorities) of type V
 template <class K, class V>
 class MaxHeap {
     struct Node { // An element of the heap: a pair (key, value)
@@ -29,17 +29,23 @@ class MaxHeap {
     void swap(int i1, int i2);
 
 public:
-    MaxHeap(int n, const K& notFound); // Create a min-heap for a max of n pairs (K,V) with notFound returned when empty
-    int getSize();              // Return number of elements in the heap
-    bool hasKey(const K& key);  // Heap has key?
-    void insert(const K& key, const V& value);      // Insert (key, value) on the heap
-    void increaseKey(const K& key, const V& value); // Decrease value of key
-    K removeMax(); // remove and return key with smaller value
+    //! Create a max-heap for a max of n pairs (K,V) with notFound returned when empty
+    MaxHeap(int n, const K& notFound);
+    //! Return number of elements in the heap
+    int getSize();
+    //! Heap has key?
+    bool hasKey(const K& key);
+    //! Insert (key, value) on the heap
+    void insert(const K& key, const V& value);
+    //! Decrease value of key
+    void increaseKey(const K& key, const V& value);
+    //!remove and return key with smaller value
+    K removeMax();
 };
 
 // ----------------------------------------------
 
-// Make a value go "up the tree" until it reaches its position
+//! Make a value go "up the tree" until it reaches its position
 template <class K, class V>
 void MaxHeap<K,V>::upHeap(int i) {
     while (i>1 && a[i].value > a[PARENT(i)].value) { // while pos smaller than parent, keep swapping to upper position
@@ -48,7 +54,7 @@ void MaxHeap<K,V>::upHeap(int i) {
     }
 }
 
-// Make a value go "down the tree" until it reaches its position
+//! Make a value go "down the tree" until it reaches its position
 template <class K, class V>
 void MaxHeap<K,V>::downHeap(int i) {
     while (LEFT(i) <= size) { // while within heap limits
@@ -60,7 +66,7 @@ void MaxHeap<K,V>::downHeap(int i) {
     }
 }
 
-// Swap two positions of the heap (update their positions)
+//! Swap two positions of the heap (update their positions)
 template <class K, class V>
 void MaxHeap<K,V>::swap(int i1, int i2) {
     Node tmp = a[i1]; a[i1] = a[i2]; a[i2] = tmp;
@@ -70,24 +76,24 @@ void MaxHeap<K,V>::swap(int i1, int i2) {
 
 // ----------------------------------------------
 
-// Create a max-heap for a max of n pairs (K,V) with notFound returned when empty
+//! Create a max-heap for a max of n pairs (K,V) with notFound returned when empty
 template <class K, class V>
 MaxHeap<K,V>::MaxHeap(int n, const K& notFound) : KEY_NOT_FOUND(notFound), size(0), maxSize(n), a(n+1) {
 }
 
-// Return number of elements in the heap
+//! Return number of elements in the heap
 template <class K, class V>
 int MaxHeap<K,V>::getSize() {
     return size;
 }
 
-// Heap has key?
+//! Heap has key?
 template <class K, class V>
 bool MaxHeap<K, V>::hasKey(const K& key) {
     return pos.find(key) != pos.end();
 }
 
-// Insert (key, value) on the heap
+//! Insert (key, value) on the heap
 template <class K, class V>
 void MaxHeap<K,V>::insert(const K& key, const V& value) {
     if (size == maxSize) return; // heap is full, do nothing
@@ -97,7 +103,7 @@ void MaxHeap<K,V>::insert(const K& key, const V& value) {
     upHeap(size);
 }
 
-// Decrease value of key to the indicated value
+//! Increases value of key to the indicated value
 template <class K, class V>
 void MaxHeap<K,V>::increaseKey(const K& key, const V& value) {
     if (!hasKey(key)) return; // key does not exist, do nothing
@@ -107,7 +113,7 @@ void MaxHeap<K,V>::increaseKey(const K& key, const V& value) {
     upHeap(i);
 }
 
-// remove and return key with bigger value
+//! remove and return key with bigger value
 template <class K, class V>
 K MaxHeap<K,V>::removeMax() {
     if (size == 0) return KEY_NOT_FOUND;

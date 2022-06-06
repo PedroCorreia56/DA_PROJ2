@@ -13,9 +13,13 @@
 #include <stack>
 
 using namespace std;
-
+//! Descobre o fluxo máximo do caminho indicado
+//! \param graph - grafo com os caminhos disponíveis
+//! \param start - vértice de origem
+//! \param end - vértice destino
+//! \return max_flow - fluxo máximo do caminho
 int MaxFlux(Graph& graph,int start, int end){
-
+    //Vê se os valores dos vértices são válidas
     if(start <=0 || start>graph.getNumNodes() || end <=0 || end>graph.getNumNodes() || start==end)
         return 0;
 
@@ -66,9 +70,16 @@ int MaxFlux(Graph& graph,int start, int end){
     return max_flow;
 }
 
-
+//! Descobre se existe um caminho que leve a quantidade de pessoas indicada
+//! \param graph - grafo que contém os caminhos disponíveis
+//! \param start - vértice de origem
+//! \param end - vértice destine
+//! \param capacity - Quantidade de Pessoas
+//! \return used_flow - quantidade de flow usado
+//! \return 0 - caso haja erro, ou não exista caminho entre os 2 vértices
 int FindPath(Graph& graph,int start,int end, int capacity){
 
+    //Vê se os valores dos vértices são válidas
     if(start <=0 || start>graph.getNumNodes() || end <=0 || end>graph.getNumNodes() || start==end)
         return 0;
 
@@ -82,7 +93,7 @@ int FindPath(Graph& graph,int start,int end, int capacity){
         }
     }
 
-    //Vetor para guardar o caminho usados
+    //Vetor para guardar o caminho usado
     vector<int> parent(graph.getNumNodes()+1, 0);
 
 
@@ -138,8 +149,7 @@ int FindPath(Graph& graph,int start,int end, int capacity){
                 e.flux+=((e.cap-e.flux)-gf[i][e.dest]);
         }
     }
-    //cout<<"\nCaminho:\n";
-    //graph.printgraph2();
+
     cout<<"Tamanho do grupo ''usado''"<<used_flow<<endl;
     cout<<"Tamanho do grupo máximo:"<<max_flow<<endl;
     if(used_flow!=0)
@@ -149,13 +159,21 @@ int FindPath(Graph& graph,int start,int end, int capacity){
 
 }
 
-
+//! Descobre se é possível aumentar a dimensão de um grupo por um número de unidades dado.
+//! \param graph - grafo que contém o caminho inicial (arestas já preenchidas com fluxo)
+//! \param initialcapacity - Tamanho Inicial do Grupo
+//! \param addedcapacity - Tamanho que se pertende adicionar
+//! \param start - vértice de origem
+//! \param end - vértice de destino
 void UpdatePath(Graph& graph,int initialcapacity,int addedcapacity,int start,int end){
 
+    //Tamanho que se pertende adicionar não pode ser negativo
     if(addedcapacity<0)
         return;
+        //Descobre se é possível addicionar a capacidade desejada ao grafo
         int addedflux= FindPath(graph,start,end,addedcapacity);
 
+        //Caso tenha sido capaz de adicionar a capacidade
         if(initialcapacity+addedflux==initialcapacity+addedcapacity){
             graph.printgraph2();
             cout<<"Adição concluída\n";
@@ -168,20 +186,29 @@ void UpdatePath(Graph& graph,int initialcapacity,int addedcapacity,int start,int
 
 }
 
-
+//! Consegue a duração mínima do caminho do vértice de origem ao vértice de destino
+//! \param graph - grafo com as arestas a serem utilizadas
+//! \param start - vértice de origem
+//! \param end - vértice de destino
+//! \return int - Duração mínima do caminho
+//! \return vector<int> - Array com a data de início mais proxima de cada vértice do caminho tomado
 pair<int,vector<int> > EarliestStart(Graph graph,int start,int end){
 
-
+    //Vetor para guardar o caminho usado
     vector<int> parent(graph.getNumNodes() +1, 0);
+
+    //Vetor que guarda o a data de inicio mais próxima de cada vértice
     vector<int> ES(graph.getNumNodes() +1,0);
+
     vector<int> GrauE(graph.getNumNodes() +1,0);
-    queue<int> S;
+    queue<int> S;//fila que guarda o vértice para ler
 
     if(start <=0 || start>graph.getNumNodes() || end <=0 || end>graph.getNumNodes() || start==end)
         return {0,parent};
 
     for (int i = start; i <=graph.getNumNodes() ; i++) {
         for (auto e : graph.nodes[i].adj) {
+            //Se o flux for maior que zero quer dizer que é um dos caminhos a ser considerado no gráfico
             if(e.flux>0)
                 GrauE[e.dest]=GrauE[e.dest]+1;
         }
@@ -192,14 +219,15 @@ pair<int,vector<int> > EarliestStart(Graph graph,int start,int end){
             S.push(i);
     }
 
-    int DurMin=-1;
+    int DurMin=-1;// Guarda a duraçaõ mínima do caminho
     int vf=0;
 
-   // cout<<"S size:"<<S.size()<<endl;
+   // Ciclo para descobrir a duração mínima do caminho
     while(S.size()!=0){
         int flag=0;
         int v=S.front();
         S.pop();
+
         if(DurMin<ES[v]){
             DurMin=ES[v];
             vf=v;
@@ -207,12 +235,12 @@ pair<int,vector<int> > EarliestStart(Graph graph,int start,int end){
         if(v==end)
             break;
         for (auto w : graph.nodes[v].adj) {
+            //Se o flux for maior que zero quer dizer que é um dos caminhos a ser considerado no gráfico
             if(w.flux>0){
                 if(ES[w.dest]<ES[v]+w.horas){
                     ES[w.dest]=ES[v]+w.horas;
                     parent[w.dest]=v;
                 }
-
                 GrauE[w.dest]=GrauE[w.dest]-1;
                 if(GrauE[w.dest]==0)
                     S.push(w.dest);
@@ -221,7 +249,7 @@ pair<int,vector<int> > EarliestStart(Graph graph,int start,int end){
         }
 
     }
-   // printpath(parent,vf,vf);
+
     return {DurMin,ES};
 }
 //! Descobre o máximo tempo de espera e o(s) nó(s) em que isso acontece
@@ -246,7 +274,7 @@ void cenario2_5(Graph graph,int start,int end){
     //Calcula o máximo tempo de espera de cada nó
     for (int i = start; i <=graph.getNumNodes() ; i++) {
         for (auto e : graph.nodes[i].adj) {
-            //Só é aceite um caminho
+            //Se o flux for maior que zero quer dizer que é um dos caminhos a ser considerado no gráfico
             if(e.flux>0){
                 int max=ES[e.dest]-ES[i]-e.horas; // Tempo de espera= ES[nó atual] - (ES[nó anterior] + duração da aresta)
                 if(NodeWaitTime[e.dest]<max){
@@ -257,11 +285,14 @@ void cenario2_5(Graph graph,int start,int end){
         }
     }
     int MaxWaitTime=INT_MIN;
+    //Descobre o maior tempo de espera dos nós considerados
     for(int i=start; i<=graph.getNumNodes();i++){
         if(MaxWaitTime<=NodeWaitTime[i])
             MaxWaitTime=NodeWaitTime[i];
     }
-    vector<int> NodesStoped;
+    vector<int> NodesStoped;//Vetor para guardar os nós com o menor tempo de espera
+
+    //Guarda no vetor os nós em que o tempo de espera deles é o mesmo que o Maior tempo de Espera
     for(int i=start; i<=graph.getNumNodes();i++){
         if(MaxWaitTime==NodeWaitTime[i])
             NodesStoped.push_back(i);
