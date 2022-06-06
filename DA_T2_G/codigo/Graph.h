@@ -31,13 +31,14 @@ public:
 
     // Add edge from source to destination with a certain weight
     void addEdge(int src, int dest, int capacidade, int horas);
-
+    static bool bfs3(vector<vector<int>>& gf , int s, int t,  vector<int>& parent,int size);
     int getNumNodes();
     static bool bfs2(vector<vector<int>>& gf , int s, int t,  vector<int>& parent,int size);
     void clear(int nodesNum, bool dir = false);
     bool EdgeExists(int start,int end);
     void printgraph1();
     void printgraph2();
+    void printgraph3();
 };
 
 #endif

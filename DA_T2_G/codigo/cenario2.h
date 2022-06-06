@@ -221,22 +221,23 @@ pair<int,vector<int> > EarliestStart(Graph graph,int start,int end){
    // printpath(parent,vf,vf);
     return {DurMin,ES};
 }
-
+//! Descobre o máximo tempo de espera e o(s) nó(s) em que isso acontece
+//! \param graph - grafo a ser utilizado
+//! \param start - vértice de origem
+//! \param end - vértice de destino
 void cenario2_5(Graph graph,int start,int end){
 
-    int maxflux= MaxFlux(graph,start,end);
-
+    //Guarda o valor da duração mínima do caminho
     int DurMin= EarliestStart(graph,start,end).first;
+
     if(DurMin==-1){
         cout<<"Dados inválidos,ou vértices não existem ou não existe ligação entre os dois\n";
         return;
     }
+
     vector<int> ES=EarliestStart(graph,start,end).second; // Recebe o array que contem o Earliest Start de cada nó
-    cout<<"Elementos ES:";
-    for (auto e : ES) {
-        cout<<e<<" ";
-    }
-    cout<<endl;
+
+   //Guarda o tempo de espera máximo de cada nó
     vector<int> NodeWaitTime(graph.getNumNodes()+1,0);
     //Calcula o máximo tempo de espera de cada nó
     for (int i = start; i <=graph.getNumNodes() ; i++) {
@@ -267,7 +268,8 @@ void cenario2_5(Graph graph,int start,int end){
         cout<<i<<" ";
     }
     cout<<endl;
-    graph.printgraph2();
+
+
 }
 
 

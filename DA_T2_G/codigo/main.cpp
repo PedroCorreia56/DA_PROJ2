@@ -174,6 +174,13 @@ int main(){
         cout<<"Indique o vértice de origem e o vértice de destino:";
         cin>>start>>end;
 
+        int maxflux=MaxFlux(grafo,start,end);
+        if(maxflux==0){
+            cout<<"Erro nos dados inseridos, nós não existem ou não existe ligação entre os dois\n";
+            return 0;
+        }
+        cout<<"Caminho a ser usado:\n";
+        grafo.printgraph3();
         cenario2_5(grafo,start,end);
 
     }
@@ -181,83 +188,6 @@ int main(){
         cout<<"Não inseriu um cenário válido\n";
     }
 
-
-
-    /*int max=MaxGroupSize(grafo,1,5000).first;
-    cout<<"MAx grooup size:"<<max<<endl;
-    cout<<"Path:";
-    vector<int> parent(grafo.getNumNodes()+1, 0);
-    parent=MaxGroupSize(grafo,1,5000).second;
-    printpath(parent,5000,5000);
-     */
-   // cenario1_2(grafo,1,5000);
-
-   // teste(grafo,1,50);
-    //cout<<"NOS:"<<grafo.getNumNodes()<<endl;
-  // cout<<"MAX CAPACITY:"<<MaxGroupSize(grafo,9,5)<<endl;
- //  cout<<"Distance:"<<ShortestPath(grafo,9,5)<<endl;
-   // cout<<"Capacidade:"<<grafo.nodes.at(1).adj.begin()->cap<<" DEST:"<<grafo.nodes[1].adj.begin()->dest<<endl;
-  // int flux =FindPath(grafo,1,6,22);
-   //cout<<"FLUX:"<<flux<<endl;
-
-
-
-   /*
-    int maxflux=MaxFlux(grafo,1,7);
-    if(maxflux==0){
-        cout<<"Erro nos dados inseridos\n";
-        return 0;
-    }
-    grafo.printgraph2();
-    cout<<"Max Flux:"<<maxflux<<endl;
-
-    /*
-  int p,c;
-    vector<int> path;
-    cout<<"Enter your path (press 0 to end):";
-    cin>>p;
-  while(p!=0){
-      path.push_back(p);
-      cin>>p;
-  }
-  cout<<"Enter the capacity:";
-  cin>>c;
-    if(!FillPath(grafo,path,c)){
-        cout<<"Capacidade inicial dada não é possivel no caminho dado"<<endl;
-        return 0;
-    }
-    grafo.printgraph2();
-    int added;
-    cout<<"Enter the capacity you want to add:";
-    cin>>added;
-    UpdatePath(grafo,c,added,path);
- //   grafo.printgraph2();
-*/
-/*
-int start,end,groupsize;
-    cout<<"Enter the starting node:";
-    cin>>start;
-    cout<<"Enter the last node:";
-    cin>>end;
-    cout<<"Enter the groupsize:";
-    cin>>groupsize;
-    if(!FindPath(grafo,start,end,groupsize)){
-        cout<<"Algo deu errado\n";
-        return 0;
-    }
-*/
-    //Graph teste(grafo.getNumNodes(),true);
-    //CopyPathToGraph(grafo,teste);
-   // cout<<"GRAFO DE TESTES\n";
-  //  teste.printgraph1();
- /*   int es= EarliestStart(grafo).first;
-    if(es==0 || es==-1){
-        cout<<"DEU ERRO\n";
-        return 0;
-    }
-    cout<<"Earliest Start:"<<es<<endl;
-    LatestFinish(grafo,5);
-*/
     return 0;
 }
 
