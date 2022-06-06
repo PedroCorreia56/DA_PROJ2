@@ -137,22 +137,6 @@ int FindPath(Graph& graph,int start,int end, int capacity){
             e.flux+=(e.cap-gf[i][e.dest]);
             else //Caso a aresta tenha fluxo inical, usado por causa do cenário 2.2
                 e.flux+=((e.cap-e.flux)-gf[i][e.dest]);
-            /*if(e.flux<0){
-                cout<<"I:"<<i<<"-->"<<"e.dest:"<<e.dest<<" FLUXO:"<<e.flux<<endl;
-               // cout<<"Entrou primeiro if\n";
-                if(graph.EdgeExists(e.dest,i)){
-                  //  cout<<"Entrou segundo if\n";
-                    for(auto itr=graph.nodes[e.dest].adj.begin();itr!=graph.nodes[e.dest].adj.end();itr++){
-                        if(itr->dest==i){
-                         //   cout<<"Entrou terceiro if\n";
-                            cout<<"e.dest"<<e.dest<<"-->"<<itr->dest<<" Fluxo:"<<itr->flux<<endl;
-                            itr->flux++;
-                            cout<<"e.dest"<<e.dest<<"-->"<<itr->dest<<" NEW Fluxo:"<<itr->flux<<endl;
-                        }
-                    }
-                }
-                e.flux=0;
-            }*/
         }
     }
     //cout<<"\nCaminho:\n";
@@ -202,176 +186,95 @@ int FindMinCapacity(Graph graph, vector<int> path){
     }
     return min;
 }
-//! Preenche, no grafo dado, as arestas dadas no path com o fluxo dado
-//! \param graph- grafo
-//! \param path - caminho dado
-//! \param initialcapacity - fluxo que se quer usar
-//! \return true - Foi possível preencher as arestas com o fluxo dado
-//! \return false- Fluxo dado superior à capacidade minima do percurso dado
-bool FillPath(Graph& graph,vector<int> path,int initialcapacity){
 
+void UpdatePath(Graph& graph,int initialcapacity,int addedcapacity,int start,int end){
 
-    int min= FindMinCapacity(graph,path);
-    if(min==0)
-        return false;
-    int added_flow;//Serve para ver o fluxo que vai ser adicionado às arestas usadas
-
-    // A capacidade inicial não pode ser maior que a capacidade mínima
-    if(initialcapacity>min)
-        return false;
-    else if(min>initialcapacity)
-            added_flow=initialcapacity;
-    else
-        added_flow=min;
-
-    int cont=0;
-    //Prenche as arestas usadas com o fluxo usado no caminho
-    for (int i = path[cont]; i <=graph.getNumNodes() ; i=path[cont]) {
-        for ( auto & e : graph.nodes[i].adj) {
-            if(e.dest==path[cont+1]){
-                e.flux+=added_flow;
-                cont++;
-               // cout<<i<<"-->"<<e.dest<<"  Cap:"<<e.cap<<endl;
-                break;
-            }
-        }
-        if(i==path[path.size()-1])
-            break;
-    }
-
-  //  graph.printgraph2();
-  //  cout<<"MIN:"<<min<<endl;
-    return true;
-}
-void UpdatePath(Graph& graph,int initialcapacity,int addedcapacity,vector<int> path){
-
-    if(addedcapacity==0)
+    if(addedcapacity<0)
         return;
-    int start=path[0];
-    int end=path[path.size()-1];
+        int addedflux= FindPath(graph,start,end,addedcapacity);
 
-    int min= FindMinCapacity(graph,path);
-
-    //Caso o fluxo adicional ainda caiba no caminho usado
-    if(addedcapacity<=(min-initialcapacity)){
-        cout<<"AdedCpacity:"<<addedcapacity<<" MIN-INCP="<<min-initialcapacity<<endl;
-        int cont=0;
-        //Prenche as arestas usadas com o fluxo extra
-        for (int i = path[cont]; i <=graph.getNumNodes() ; i=path[cont]) {
-            for ( auto & e : graph.nodes[i].adj) {
-                if(e.dest==path[cont+1]){
-                    e.flux+=addedcapacity;
-                    cont++;
-                    break;
-                }
-            }
-            if(i==path[path.size()-1])
-                break;
-        }
-
-        return;
-    }
-    else{
-
-        int missingflux=min-initialcapacity; // FLUXO que ainda cabe no caminho usado
-        int remaingflux=addedcapacity-missingflux; // FLUXO que sobra
-        cout<<"MISSINGFLUX:"<<missingflux<<" REMAINGFLUX:"<<remaingflux<<endl;
-        int cont=0;
-
-        //Prenche as arestas usadas com o fluxo extra
-        for (int i = path[cont]; i <=graph.getNumNodes() ; i=path[cont]) {
-
-            for ( auto & e : graph.nodes[i].adj) {
-                if(e.dest==path[cont+1]){
-                    e.flux+=missingflux;
-                    cont++;
-                    break;
-                }
-            }
-            if(i==path[path.size()-1])
-                break;
-        }
-
-        int flux= FindPath(graph,start,end,remaingflux);
-        if((initialcapacity+addedcapacity)==(flux+initialcapacity+missingflux)){
+        if(initialcapacity+addedflux==initialcapacity+addedcapacity){
             graph.printgraph2();
             cout<<"Adição concluída\n";
         }
         else{
             cout<<"Não é possível realizar a adição\n";
         }
-
-        cout<<"FLUX WANTED:"<<initialcapacity+addedcapacity<<endl;
-        cout<<"Flux used:"<<flux+initialcapacity+missingflux<<endl;
-
-    }
-
-
+        cout<<"Capacidade total pedida:"<<initialcapacity+addedcapacity<<endl;
+        cout<<"Capacidade atingida:"<<initialcapacity+addedflux<<endl;
 
 }
 
-void CopyPathToGraph(Graph graph1,Graph& graph2){
 
-    for (int i = 1; i <=graph1.getNumNodes() ; i++) {
-        for (auto e : graph1.nodes[i].adj) {
-            // if(e.dest<=lastnode)
-            if(e.flux!=0)
-                graph2.addEdge(i,e.dest,e.cap,e.horas);
-        }
-    }
+pair<int,vector<int> > EarliestStart(Graph graph,int start,int end){
 
-
-}
-pair<int,vector<int> > EarliestStart(Graph graph){
 
     vector<int> parent(graph.getNumNodes() +1, 0);
     vector<int> ES(graph.getNumNodes() +1,0);
     vector<int> GrauE(graph.getNumNodes() +1,0);
     queue<int> S;
 
-    for (int i = 1; i <=graph.getNumNodes() ; i++) {
+    if(start <=0 || start>graph.getNumNodes() || end <=0 || end>graph.getNumNodes() || start==end)
+        return {0,parent};
+
+    for (int i = start; i <=graph.getNumNodes() ; i++) {
         for (auto e : graph.nodes[i].adj) {
                 GrauE[e.dest]=GrauE[e.dest]+1;
         }
     }
 
-    for (int i =1; i <=graph.getNumNodes()  ; i++) {
+    for (int i =start; i <=graph.getNumNodes()  ; i++) {
         if(GrauE[i]==0)
             S.push(i);
     }
 
     int DurMin=-1;
     int vf=0;
+
    // cout<<"S size:"<<S.size()<<endl;
     while(S.size()!=0){
+        int flag=0;
         int v=S.front();
         S.pop();
         if(DurMin<ES[v]){
             DurMin=ES[v];
             vf=v;
         }
+        if(v==end)
+            break;
         for (auto w : graph.nodes[v].adj) {
                 if(ES[w.dest]<ES[v]+w.horas){
                     ES[w.dest]=ES[v]+w.horas;
                     parent[w.dest]=v;
                 }
+
                 GrauE[w.dest]=GrauE[w.dest]-1;
                 if(GrauE[w.dest]==0)
                     S.push(w.dest);
+
         }
+
     }
    // printpath(parent,vf,vf);
     return {DurMin,ES};
 }
 
-void cenario2_5(Graph graph,int wantednode){
+void cenario2_5(Graph graph,int start,int end){
 
-    int DurMin= EarliestStart(graph).first;
-    vector<int> ES=EarliestStart(graph).second; // Recebe o array que contem o Earliest Start de cada nó
-
+    int DurMin= EarliestStart(graph,start,end).first;
+    if(DurMin==-1){
+        cout<<"Dados inválidos,ou vértices não existem ou não existe ligação entre os dois\n";
+        return;
+    }
+    vector<int> ES=EarliestStart(graph,start,end).second; // Recebe o array que contem o Earliest Start de cada nó
+    cout<<"Elementos ES:";
+    for (auto e : ES) {
+        cout<<e<<" ";
+    }
+    cout<<endl;
     vector<int> NodeWaitTime(graph.getNumNodes()+1,0);
     //Calcula o máximo tempo de espera de cada nó
-    for (int i = 1; i <=graph.getNumNodes() ; i++) {
+    for (int i = start; i <=graph.getNumNodes() ; i++) {
         for (auto e : graph.nodes[i].adj) {
             int max=ES[e.dest]-ES[i]-e.horas; // Tempo de espera= ES[nó atual] - (ES[nó anterior] + duração da aresta)
                     if(NodeWaitTime[e.dest]<max){
@@ -379,19 +282,16 @@ void cenario2_5(Graph graph,int wantednode){
                     }
         }
     }
-
     int MaxWaitTime=INT_MIN;
-    for(int i=1; i<=graph.getNumNodes();i++){
+    for(int i=start; i<=graph.getNumNodes();i++){
         if(MaxWaitTime<=NodeWaitTime[i])
             MaxWaitTime=NodeWaitTime[i];
     }
-
     vector<int> NodesStoped;
-    for(int i=1; i<=graph.getNumNodes();i++){
+    for(int i=start; i<=graph.getNumNodes();i++){
         if(MaxWaitTime==NodeWaitTime[i])
             NodesStoped.push_back(i);
     }
-
     cout<<"MAximo tempo de espera:"<<MaxWaitTime<<endl;
     cout<<"Isso aconteceu em:"<<NodesStoped.size()<<" nó(s)\n";
     cout <<" Nó(s):";

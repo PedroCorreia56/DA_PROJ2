@@ -14,9 +14,10 @@ using namespace std;
 #include <bits/stdc++.h>
 #include <sys/time.h>
 
+
 int main(){
 
-    string grafofile("../input/in01_b.txt");//Ficheiro com o grafo
+    string grafofile("../input/in14.txt");//Ficheiro com o grafo
     string line;//string que guarda as linhas do ficheiro
 
     ifstream input_file(grafofile);
@@ -64,8 +65,7 @@ int main(){
         cout<<"Indique o vértice de origem e o vértice de destino:";
         cin>>start>>end;
 
-        time_t starta, enda;
-        time(&starta);
+
         int maxgroupsize= MaxGroupSize(grafo,start,end).first;
         parent=MaxGroupSize(grafo,start,end).second;
         if(maxgroupsize==0){
@@ -74,11 +74,7 @@ int main(){
         }
         cout<<"A maior dimensão do grupo é:"<<maxgroupsize<<"\nCom o caminho:";
         printpath(parent,end,end);
-        time(&enda);
-        double time_taken = double(enda - starta);
-        cout << "Time taken by program is : " << fixed
-             << time_taken;
-        cout << " sec " << endl;
+
         cout<<endl;
 
     }
@@ -86,6 +82,7 @@ int main(){
 
         cout<<"Indique o vértice de origem e o vértice de destino:";
         cin>>start>>end;
+
         if(!cenario1_2(grafo,start,end)){
             cout<<"Erro, mesmo vértice ou não existe ligação do inicial para o final\n";
             return 0;
@@ -101,41 +98,83 @@ int main(){
         cin>>start>>end>>capacity;
 
         cout<<"Tamanho do grupo pedido:"<<capacity<<endl;
+
         int usedflow= FindPath(grafo,start,end,capacity);
         if(usedflow==0){
             cout<<"Erro nos dados inseridos, nós não existem ou não existe ligação entre os dois\n";
             return 0;
         }
-        grafo.printgraph2();
+
         if(usedflow<capacity){
             cout<<"O tamanho desse grupo não é aceite, atrás aparece o caminho para a capaciade máxima aceite para esse caminho\n";
         }
+        grafo.printgraph2();
 
     }
     else if(cen==2.2){
 
+        cout<<"Indique o vértice de origem,o vértice de destino e o tamanho do grupo inicial que deseja:";
+        cin>>start>>end>>capacity;
 
+
+        int usedflow= FindPath(grafo,start,end,capacity);
+        if(usedflow==0){
+            cout<<"Erro nos dados inseridos, nós não existem ou não existe ligação entre os dois\n";
+            return 0;
+        }
+        if(usedflow<capacity){
+            cout<<"O tamanho desse grupo não é aceite, atrás aparece o caminho para a capaciade máxima aceite para esse caminho\n";
+            return 0;
+        }
+        cout<<"Caminho Inicial:\n";
+        grafo.printgraph2();
+        cout<<"Indique quanto pretende adicionar ao grupo:";
+        int addedcapacity;
+        cin>>addedcapacity;
+        UpdatePath(grafo,capacity,addedcapacity,start,end);
     }
     else if(cen==2.3){
         cout<<"Indique o vértice de origem e o vértice de destino:";
         cin>>start>>end;
+        struct timespec starta, enda;
+        clock_gettime(CLOCK_MONOTONIC, &starta);
 
+        ios_base::sync_with_stdio(false);
         int maxflux=MaxFlux(grafo,start,end);
         if(maxflux==0){
             cout<<"Erro nos dados inseridos, nós não existem ou não existe ligação entre os dois\n";
             return 0;
         }
+        clock_gettime(CLOCK_MONOTONIC, &enda);
+        double time_taken;
+        time_taken = (enda.tv_sec - starta.tv_sec) * 1e9;
+        time_taken = (time_taken + (enda.tv_nsec - starta.tv_nsec)) * 1e-9;
+
+        cout << "Time taken by program is : " << fixed
+             << time_taken << setprecision(9);
+        cout << " sec" << endl;
+
         cout<<"Caminho:\n";
         grafo.printgraph2();
         cout<<"Dimensão Máxima do grupo:"<<maxflux<<endl;
     }
     else if(cen==2.4){
+        cout<<"Indique o vértice de origem e o vértice de destino:";
+        cin>>start>>end;
 
+        int temporeunir= EarliestStart(grafo,start,end).first;
 
+        if(temporeunir==-1 || temporeunir==0){
+            cout<<"Erro nos dados inseridos, nós não existem ou não existe ligação entre os dois\n";
+            return 0;
+        }
+        cout<<"Tempo que se reunem: "<<temporeunir<<"h"<<endl;
     }
     else if(cen==2.5){
+        cout<<"Indique o vértice de origem e o vértice de destino:";
+        cin>>start>>end;
 
-
+        cenario2_5(grafo,start,end);
     }
     else{
         cout<<"Não inseriu um cenário válido\n";
@@ -150,7 +189,7 @@ int main(){
     parent=MaxGroupSize(grafo,1,5000).second;
     printpath(parent,5000,5000);
      */
-    cenario1_2(grafo,1,5000);
+   // cenario1_2(grafo,1,5000);
 
    // teste(grafo,1,50);
     //cout<<"NOS:"<<grafo.getNumNodes()<<endl;
