@@ -19,8 +19,8 @@ int MaxFlux(Graph& graph,int start, int end){
     if(start <=0 || start>graph.getNumNodes() || end <=0 || end>graph.getNumNodes() || start==end)
         return 0;
 
-
-    vector<vector<int>>gf( graph.getNumNodes()+1 , vector<int> (graph.getNumNodes()+1,0));//Grafo Residual
+    //Grafo Residual
+    vector<vector<int>>gf( graph.getNumNodes()+1 , vector<int> (graph.getNumNodes()+1,0));
 
     //Copia o grafo original para o Grafo Residual
     for (int i = 1; i <=graph.getNumNodes() ; i++){
@@ -38,9 +38,9 @@ int MaxFlux(Graph& graph,int start, int end){
     // O ciclo corre enquanto existir caminho do Vértice Inicial até o Vértice final no Grafo Residual
     while (Graph::bfs2(gf,start,end,parent,graph.getNumNodes()+1)) {
 
-
-        //Encontra a capacidade residual mínima do caminho encontrado no BFS
-        int path_flow = INT_MAX;//Guarda a capacidade residual mínima do caminho
+        //Guarda a capacidade residual mínima do caminho
+        int path_flow = INT_MAX;
+        // Encontra a capacidade residual mínima do caminho encontrado no BFS
         for (v = end; v != start; v = parent[v]) {
             u = parent[v];
             path_flow = min(path_flow, gf[u][v]);
@@ -53,7 +53,7 @@ int MaxFlux(Graph& graph,int start, int end){
             gf[u][v] -= path_flow;
             gf[v][u] += path_flow;
         }
-        max_flow += path_flow;
+        max_flow += path_flow;//adiciona o fluxo do caminho encontrado
     }
 
     // Atualiza o fluxo das arestas do grafo original
@@ -63,79 +63,79 @@ int MaxFlux(Graph& graph,int start, int end){
         }
     }
 
-    //graph.printgraph2();
-   // cout<<"MAX FLOW:"<<max_flow<<endl;
     return max_flow;
 }
 
 
 int FindPath(Graph& graph,int start,int end, int capacity){
 
+    if(start <=0 || start>graph.getNumNodes() || end <=0 || end>graph.getNumNodes() || start==end)
+        return 0;
+
+    //Grafo Residual
     vector<vector<int>>gf( graph.getNumNodes()+1 , vector<int> (graph.getNumNodes()+1,0));
 
-  //  cout<<"INITIAL:\n";
-  //  graph.printgraph1();
+    //Copia o grafo original para o Grafo Residual
     for (int i = 1; i <=graph.getNumNodes() ; i++){
         for (auto e : graph.nodes[i].adj) {
-       //     cout<<i<<":";
-        //    cout<<"-->"<<e.dest<<"\t\t"<<e.flux<<"/"<<e.cap;
-       //     cout<<endl;
-      //      cout<<"ECAP-EFLUX"<<e.cap-e.flux<<endl;
-            gf[i][e.dest]=e.cap-e.flux;
+            gf[i][e.dest]=e.cap-e.flux; //o fluxo inicial é 0, mas está assim para ser capaz de suportar o cenário 2.2
         }
     }
+
+    //Vetor para guardar o caminho usados
     vector<int> parent(graph.getNumNodes()+1, 0);
 
 
-    int v,u;
-    int max_flow = 0;
-    int used_flow=0;
+    int v,u;//variavéis de apoio
+    int max_flow = 0;//Guarda o fluxo máximo
+    int used_flow=0;//Guarda o fluxo utilizado
     while (Graph::bfs2(gf,start,end,parent,graph.getNumNodes()+1)) {
-        // Find minimum residual capacity of the edges along
-        // the path filled by BFS. Or we can say find the
-        // maximum flow through the path found.
+
+        //Guarda a capacidade residual mínima do caminho
         int path_flow = INT_MAX;
+        //Encontra a capacidade residual mínima do caminho encontrado no BFS
         for (v = end; v != start; v = parent[v]) {
             u = parent[v];
-         //   cout<<v<<"<--";
             path_flow = min(path_flow, gf[u][v]);
         }
-       // cout<<v<<" CApacity="<<path_flow;
-        cout<<endl;
+
+        //variável auxiliar
         int added_flow;
+        //Caso o fluxo máximo+fluxo novo caminho seja menor que o capacidade dada
         if((max_flow+path_flow)<=capacity)
             added_flow=path_flow;
-        else
+        else//Caso a soma do fluxo do novo caminho com o fluxo máximo seja superior à capacidade, apenas usa-se a quantidade necessária
             added_flow=capacity-max_flow;
-        // update residual capacities of the edges and
-        // reverse edges along the path
+
+        //Atualiza a capacidade residual das arestas normais e
+        // das arestas inversas ao longo do caminho
         for (v = end; v != start; v = parent[v]) {
             u = parent[v];
-            //cout<<"BEFORE:"<<u<<"-->"<<v<<":"<<gf[u][v]<<endl;
             gf[u][v] -= added_flow;
-            //cout<<"After:"<<u<<"-->"<<v<<":"<<gf[u][v]<<endl;
             gf[v][u] += added_flow;
         }
-        if(added_flow!=path_flow){
 
+        //Se isto acontecer quer dizer que já se chegou à capacidade pedida
+        if(added_flow!=path_flow){
             max_flow += path_flow;
             used_flow+=added_flow;
             break;
         }
 
+        //Adiciona o fluxo adicionado ao fluxo usado
         used_flow+=added_flow;
-        // Add path flow to overall flow
+        //adiciona o fluxo do caminho encontrado ao fluxo total
         max_flow += path_flow;
     }
 
 
-    // FILL FLUX
+    // Atualiza o fluxo das arestas do grafo original
     for (int i = 1; i <=graph.getNumNodes() ; i++){
         for (auto & e : graph.nodes[i].adj) {
             //Caso a aresta não tenha fluxo inicial
             if (e.flux==0)
             e.flux+=(e.cap-gf[i][e.dest]);
-            else //Caso a aresta tenha fluxo inical
+            else //Caso a aresta tenha fluxo inical, usado por causa do cenário 2.2
                 e.flux+=((e.cap-e.flux)-gf[i][e.dest]);
             /*if(e.flux<0){
                 cout<<"I:"<<i<<"-->"<<"e.dest:"<<e.dest<<" FLUXO:"<<e.flux<<endl;
@@ -155,10 +155,10 @@ int FindPath(Graph& graph,int start,int end, int capacity){
             }*/
         }
     }
-    cout<<"\nFINAL:\n";
-    graph.printgraph2();
-    cout<<"USED FLOW:"<<used_flow<<endl;
-   // cout<<"MAX FLOW:"<<max_flow<<endl;
+    //cout<<"\nCaminho:\n";
+    //graph.printgraph2();
+    cout<<"Tamanho do grupo ''usado''"<<used_flow<<endl;
+    cout<<"Tamanho do grupo máximo:"<<max_flow<<endl;
     if(used_flow!=0)
     return used_flow;
     else

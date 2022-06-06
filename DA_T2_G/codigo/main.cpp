@@ -11,6 +11,9 @@
 #include "cenario2.h"
 using namespace std;
 
+#include <bits/stdc++.h>
+#include <sys/time.h>
+
 int main(){
 
     string grafofile("../input/in01_b.txt");//Ficheiro com o grafo
@@ -55,11 +58,14 @@ int main(){
 
     vector<int> parent(grafo.getNumNodes()+1, 0);//vetor usado para dar print a caminhos
     int start,end;//Vértices iniciais e finais, respetivamente
+    int capacity;//Tamanho do grupo inicial
     if(cen==1.1)
     {
         cout<<"Indique o vértice de origem e o vértice de destino:";
         cin>>start>>end;
 
+        time_t starta, enda;
+        time(&starta);
         int maxgroupsize= MaxGroupSize(grafo,start,end).first;
         parent=MaxGroupSize(grafo,start,end).second;
         if(maxgroupsize==0){
@@ -68,6 +74,11 @@ int main(){
         }
         cout<<"A maior dimensão do grupo é:"<<maxgroupsize<<"\nCom o caminho:";
         printpath(parent,end,end);
+        time(&enda);
+        double time_taken = double(enda - starta);
+        cout << "Time taken by program is : " << fixed
+             << time_taken;
+        cout << " sec " << endl;
         cout<<endl;
 
     }
@@ -86,9 +97,23 @@ int main(){
     else if(cen==2.1)
     {
 
+        cout<<"Indique o vértice de origem,o vértice de destino e o tamanho do grupo que deseja:";
+        cin>>start>>end>>capacity;
+
+        cout<<"Tamanho do grupo pedido:"<<capacity<<endl;
+        int usedflow= FindPath(grafo,start,end,capacity);
+        if(usedflow==0){
+            cout<<"Erro nos dados inseridos, nós não existem ou não existe ligação entre os dois\n";
+            return 0;
+        }
+        grafo.printgraph2();
+        if(usedflow<capacity){
+            cout<<"O tamanho desse grupo não é aceite, atrás aparece o caminho para a capaciade máxima aceite para esse caminho\n";
+        }
 
     }
     else if(cen==2.2){
+
 
     }
     else if(cen==2.3){

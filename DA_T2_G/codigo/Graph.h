@@ -20,10 +20,6 @@ class Graph {
 
     struct Node {
         list<Edge> adj; // The list of outgoing edges (to adjacent nodes)
-        bool visited;   // As the node been visited on a search?
-        int distance;
-        int capacity;
-        int parent;
     };
     bool hasDir;        // false: undirect; true: directed
     int n;
@@ -36,16 +32,9 @@ public:
     // Add edge from source to destination with a certain weight
     void addEdge(int src, int dest, int capacidade, int horas);
 
-    // Depth-First Search: example implementation
-    void dfs(int v);
-
-    // Breadth-First Search: example implementation
-    void bfs(int v);
-
     int getNumNodes();
     static bool bfs2(vector<vector<int>>& gf , int s, int t,  vector<int>& parent,int size);
     void clear(int nodesNum, bool dir = false);
-    void DuplicateGraph(Graph *graph1,Graph graph2);
     bool EdgeExists(int start,int end);
     void printgraph1();
     void printgraph2();

@@ -11,31 +11,7 @@ void Graph::addEdge(int src, int dest, int capacity, int hours) {
     if (!hasDir) nodes[dest].adj.push_back({src, capacity,hours,0});
 }
 
-void Graph::dfs(int v) {
-    nodes[v].visited=true;
-    for(auto edge : nodes[v].adj){
-        if(!nodes[edge.dest].visited){
-            dfs(edge.dest);
-        }
-    }
-}
 
-void Graph::bfs(int v) {
-    queue<int> q;
-    q.push(v);
-    nodes[v].visited = true;
-    while(q.size() > 0){
-        int u = q.front();
-        q.pop();
-        for(auto e: nodes[u] .adj){
-            int w = e.dest;
-            if(!nodes[w].visited){
-                q.push(w);
-                nodes[w].visited = true;
-            }
-        }
-    }
-}
 bool Graph::bfs2(vector<vector<int>>& gf , int s, int t,  vector<int>& parent,int size)
 {
     // Create a visited array and mark all vertices as not
@@ -93,29 +69,9 @@ void Graph::clear(int nodesNum, bool dir) {
     nodes[nodesNum + 1];
 }
 
-//!Copy graph2 to graph1
-//! \param graph
-//! \return
-void Graph::DuplicateGraph(Graph *graph1,Graph graph2){
 
-    for (int i = 1; i <=graph2.getNumNodes() ; i++) {
-        for (auto e : graph2.nodes[i].adj) {
-            graph1->addEdge(i,e.dest,e.cap,e.horas);
-        }
-    }
 
-}
 
-//!
-bool Graph::EdgeExists(int start, int end) {
-    for (int i = 1; i <=this->getNumNodes() ; i++) {
-            for(auto e : this->nodes[i].adj){
-                if(i==start && e.dest==end)
-                    return true;
-            }
-    }
-    return false;
-}
 
 //!Prints Graph before changing the flux
 void Graph::printgraph1() {

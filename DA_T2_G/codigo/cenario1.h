@@ -115,7 +115,7 @@ bool cenario1_2(Graph graph, int start, int end) {
     //Mapa que guarda para cada Capacidade(key) o menor número de nós usados(value) para essa capacidade
     map<int, int> numeronos;
 
-
+    // O ciclo corre enquanto existir caminho do Vértice Inicial até o Vértice final no Grafo Residual
     while (Graph::bfs2(gf, start, end, parent, graph.getNumNodes() + 1)) {
 
 
