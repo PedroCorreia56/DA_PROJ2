@@ -16,7 +16,7 @@ using namespace std;
 
 int main(){
 
-    string grafofile("../input/in08_b.txt");//Ficheiro com o grafo
+    string grafofile("../input/in01_b.txt");//Ficheiro com o grafo
     string line;//string que guarda as linhas do ficheiro
 
     ifstream input_file(grafofile);
@@ -65,14 +65,14 @@ int main(){
         cin>>start>>end;
 
 
-        int maxgroupsize= MaxGroupSize(grafo,start,end).first;
-        parent=MaxGroupSize(grafo,start,end).second;
+        int maxgroupsize= cenario1::MaxGroupSize(grafo,start,end).first;
+        parent=cenario1::MaxGroupSize(grafo,start,end).second;
         if(maxgroupsize==0){
             cout<<"A maior dimensão do grupo é:0 (mesmo vertice ou não existe ligação do inicial para o final)\n";
             return 0;
         }
         cout<<"A maior dimensão do grupo é:"<<maxgroupsize<<"\nCom o caminho:";
-        printpath(parent,end,end);
+        cenario1::printpath(parent,end,end);
 
         cout<<endl;
 
@@ -82,7 +82,7 @@ int main(){
         cout<<"Indique o vértice de origem e o vértice de destino:";
         cin>>start>>end;
 
-        if(!cenario1_2(grafo,start,end)){
+        if(!cenario1::cenario1_2(grafo,start,end)){
             cout<<"Erro, mesmo vértice ou não existe ligação do inicial para o final\n";
             return 0;
         }
@@ -98,7 +98,7 @@ int main(){
 
         cout<<"Tamanho do grupo pedido:"<<capacity<<endl;
 
-        int usedflow= FindPath(grafo,start,end,capacity);
+        int usedflow= cenario2::FindPath(grafo,start,end,capacity);
         if(usedflow==0){
             cout<<"Erro nos dados inseridos, nós não existem ou não existe ligação entre os dois\n";
             return 0;
@@ -116,7 +116,7 @@ int main(){
         cin>>start>>end>>capacity;
 
 
-        int usedflow= FindPath(grafo,start,end,capacity);
+        int usedflow= cenario2::FindPath(grafo,start,end,capacity);
         if(usedflow==0){
             cout<<"Erro nos dados inseridos, nós não existem ou não existe ligação entre os dois\n";
             return 0;
@@ -130,13 +130,13 @@ int main(){
         cout<<"Indique quanto pretende adicionar ao grupo:";
         int addedcapacity;
         cin>>addedcapacity;
-        UpdatePath(grafo,capacity,addedcapacity,start,end);
+        cenario2::UpdatePath(grafo,capacity,addedcapacity,start,end);
     }
     else if(cen==2.3){
         cout<<"Indique o vértice de origem e o vértice de destino:";
         cin>>start>>end;
 
-        int maxflux=MaxFlux(grafo,start,end);
+        int maxflux=cenario2::MaxFlux(grafo,start,end);
         if(maxflux==0){
             cout<<"Erro nos dados inseridos, nós não existem ou não existe ligação entre os dois\n";
             return 0;
@@ -150,7 +150,7 @@ int main(){
     else if(cen==2.4){
         cout<<"Indique o vértice de origem e o vértice de destino:";
         cin>>start>>end;
-        int maxflux=MaxFlux(grafo,start,end);
+        int maxflux=cenario2::MaxFlux(grafo,start,end);
         if(maxflux==0){
             cout<<"Erro nos dados inseridos, nós não existem ou não existe ligação entre os dois\n";
             return 0;
@@ -158,7 +158,7 @@ int main(){
         cout<<"Caminho a ser usado:\n";
         grafo.printgraph3();
 
-        int temporeunir= EarliestStart(grafo,start,end).first;
+        int temporeunir= cenario2::EarliestStart(grafo,start,end).first;
 
         if(temporeunir==-1 || temporeunir==0){
             cout<<"Erro nos dados inseridos, nós não existem ou não existe ligação entre os dois\n";
@@ -170,14 +170,14 @@ int main(){
         cout<<"Indique o vértice de origem e o vértice de destino:";
         cin>>start>>end;
 
-        int maxflux=MaxFlux(grafo,start,end);
+        int maxflux=cenario2::MaxFlux(grafo,start,end);
         if(maxflux==0){
             cout<<"Erro nos dados inseridos, nós não existem ou não existe ligação entre os dois\n";
             return 0;
         }
         cout<<"Caminho a ser usado:\n";
         grafo.printgraph3();
-        cenario2_5(grafo,start,end);
+        cenario2::cenario2_5(grafo,start,end);
 
     }
     else{

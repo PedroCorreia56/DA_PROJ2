@@ -11,12 +11,14 @@
 #include "../codigo/MaxHeap.h"
 #include <map>
 
-
+//! funções usadas em cenario1
+class cenario1{
+    public:
 //! imprime caminho  em parent
 //!\param parent - caminho
 //!\param start - vértice de origem
 //!\param end - vértice destino
-void printpath(vector<int>& parent, int start, int end)
+static void printpath(vector<int>& parent, int start, int end)
 {
     if (start == 0) {
         return;
@@ -34,7 +36,7 @@ void printpath(vector<int>& parent, int start, int end)
 //!\param end - vértice de destino
 //! \return int - capacidade máxima do vértice de destino ou 0 em caso de erro
 //! \return vector<int> - Caminho que contem a máxima capaciade mínima
-pair<int,vector<int>> MaxGroupSize(Graph graph,int start, int end){
+static pair<int,vector<int>> MaxGroupSize(Graph graph,int start, int end){
 
     //Array que guarda a máxima capaciade mínima de cada vértice
     vector<int> capacidade(graph.getNumNodes()+1, INT_MIN);
@@ -75,7 +77,7 @@ pair<int,vector<int>> MaxGroupSize(Graph graph,int start, int end){
 //! \param current  - capacidade que se quer testar
 //! \return true - Existe uma melhor combinação de capacidade+numero_de_nós
 //! \return false - Não existe uma melhor combinação de capacidade+numero_de_nós
-bool BetterPath(map<int,vector<int>> caminhos,map<int,int> numeronos,int current) {
+static bool BetterPath(map<int,vector<int>> caminhos,map<int,int> numeronos,int current) {
 
     for (auto itr = caminhos.begin(); itr != caminhos.end(); itr++) {
         //Só começa a ver as capacidades superiores à current
@@ -105,7 +107,7 @@ bool BetterPath(map<int,vector<int>> caminhos,map<int,int> numeronos,int current
 //! \param end - nó de destino
 //! \return true - se existe pelo menos um par
 //! \return false- em caso de não existir um caminho do nó de origem para o destino ou esses nós não serem válido
-bool cenario1_2(Graph graph, int start, int end) {
+static bool cenario1_2(Graph graph, int start, int end) {
 
     if(start <=0 || start>graph.getNumNodes() || end <=0 || end>graph.getNumNodes() || start==end)
         return false;
@@ -221,5 +223,6 @@ bool cenario1_2(Graph graph, int start, int end) {
     return true;
 
 }
+};
 
 #endif //DA_T2_G_CENARIO1_H

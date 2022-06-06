@@ -13,12 +13,16 @@
 #include <stack>
 
 using namespace std;
+
+//! funções usadas em cenario2
+class cenario2{
+    public:
 //! Descobre o fluxo máximo do caminho indicado
 //! \param graph - grafo com os caminhos disponíveis
 //! \param start - vértice de origem
 //! \param end - vértice destino
 //! \return max_flow - fluxo máximo do caminho
-int MaxFlux(Graph& graph,int start, int end){
+static int MaxFlux(Graph& graph,int start, int end){
     //Vê se os valores dos vértices são válidas
     if(start <=0 || start>graph.getNumNodes() || end <=0 || end>graph.getNumNodes() || start==end)
         return 0;
@@ -77,7 +81,7 @@ int MaxFlux(Graph& graph,int start, int end){
 //! \param capacity - Quantidade de Pessoas
 //! \return used_flow - quantidade de flow usado
 //! \return 0 - caso haja erro, ou não exista caminho entre os 2 vértices
-int FindPath(Graph& graph,int start,int end, int capacity){
+static int FindPath(Graph& graph,int start,int end, int capacity){
 
     //Vê se os valores dos vértices são válidas
     if(start <=0 || start>graph.getNumNodes() || end <=0 || end>graph.getNumNodes() || start==end)
@@ -165,7 +169,7 @@ int FindPath(Graph& graph,int start,int end, int capacity){
 //! \param addedcapacity - Tamanho que se pertende adicionar
 //! \param start - vértice de origem
 //! \param end - vértice de destino
-void UpdatePath(Graph& graph,int initialcapacity,int addedcapacity,int start,int end){
+static void UpdatePath(Graph& graph,int initialcapacity,int addedcapacity,int start,int end){
 
     //Tamanho que se pertende adicionar não pode ser negativo
     if(addedcapacity<0)
@@ -192,7 +196,7 @@ void UpdatePath(Graph& graph,int initialcapacity,int addedcapacity,int start,int
 //! \param end - vértice de destino
 //! \return int - Duração mínima do caminho
 //! \return vector<int> - Array com a data de início mais proxima de cada vértice do caminho tomado
-pair<int,vector<int> > EarliestStart(Graph graph,int start,int end){
+static pair<int,vector<int> > EarliestStart(Graph graph,int start,int end){
 
     //Vetor para guardar o caminho usado
     vector<int> parent(graph.getNumNodes() +1, 0);
@@ -256,7 +260,7 @@ pair<int,vector<int> > EarliestStart(Graph graph,int start,int end){
 //! \param graph - grafo a ser utilizado
 //! \param start - vértice de origem
 //! \param end - vértice de destino
-void cenario2_5(Graph graph,int start,int end){
+static void cenario2_5(Graph graph,int start,int end){
 
     //Guarda o valor da duração mínima do caminho
     int DurMin= EarliestStart(graph,start,end).first;
@@ -307,6 +311,6 @@ void cenario2_5(Graph graph,int start,int end){
 
 
 }
-
+};
 
 #endif //DA_T2_G_CENARIO2_H
