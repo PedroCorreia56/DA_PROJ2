@@ -151,6 +151,13 @@ int main(){
     else if(cen==2.4){
         cout<<"Indique o vértice de origem e o vértice de destino:";
         cin>>start>>end;
+        int maxflux=MaxFlux(grafo,start,end);
+        if(maxflux==0){
+            cout<<"Erro nos dados inseridos, nós não existem ou não existe ligação entre os dois\n";
+            return 0;
+        }
+        cout<<"Caminho a ser usado:\n";
+        grafo.printgraph3();
         struct timespec starta, enda;
         clock_gettime(CLOCK_MONOTONIC, &starta);
 

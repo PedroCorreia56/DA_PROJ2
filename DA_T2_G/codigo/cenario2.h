@@ -239,9 +239,11 @@ void cenario2_5(Graph graph,int start,int end){
 
    //Guarda o tempo de espera máximo de cada nó
     vector<int> NodeWaitTime(graph.getNumNodes()+1,0);
+
     //Calcula o máximo tempo de espera de cada nó
     for (int i = start; i <=graph.getNumNodes() ; i++) {
         for (auto e : graph.nodes[i].adj) {
+            //Só é aceite um caminho
             if(e.flux>0){
                 int max=ES[e.dest]-ES[i]-e.horas; // Tempo de espera= ES[nó atual] - (ES[nó anterior] + duração da aresta)
                 if(NodeWaitTime[e.dest]<max){
