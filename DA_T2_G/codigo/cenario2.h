@@ -114,7 +114,6 @@ int FindPath(Graph& graph,int start,int end, int capacity){
             gf[u][v] -= added_flow;
             gf[v][u] += added_flow;
         }
-
         //Se isto acontecer quer dizer que já se chegou à capacidade pedida
         if(added_flow!=path_flow){
             max_flow += path_flow;
@@ -149,43 +148,7 @@ int FindPath(Graph& graph,int start,int end, int capacity){
         return max_flow;
 
 }
-int FindMinCapacity(Graph graph, vector<int> path){
 
-
-    int cont=0;
-    int min=INT_MAX;//Guarda a capacidade minima do percurso dado
-    int flag=0; //Se depois do segundo for continuar a 0, a aresta não existe
-    // Descobre a capacidade minima do percurso dado
-    for (int i = path[cont]; i <=graph.getNumNodes() ; i=path[cont]) {
-        flag=0;
-        //  cout<<"I:"<<i<<endl;
-        //  cout<<"PATH INICIAL:"<<path[cont]<<endl;
-        for ( auto  e : graph.nodes[i].adj) {
-            // cout<<"CONT BEFORE:"<<cont<<endl;
-            if(e.dest==path[cont+1]){
-                flag=1;
-                // cout<<"ENTROU NO 1º IF"<<endl;
-                if(min>=e.cap){
-                    min=e.cap;
-                }
-                cont++;
-               //  cout<<i<<"-->"<<e.dest<<"  Cap:"<<e.cap<<endl;
-                break;
-            }
-          //  cout<<i<<"-->"<<e.dest<<endl;
-        }
-
-        if(i==path[path.size()-1])
-            break;
-        if(flag!=1){
-            cout<<"Caminho não é possível (uma das arestas não existe)\n";
-            return 0;
-        }
-        // cout<<"CONT AFTER:"<<cont<<endl;
-        // cout<<"PATH FINAL:"<<path[cont]<<endl;
-    }
-    return min;
-}
 
 void UpdatePath(Graph& graph,int initialcapacity,int addedcapacity,int start,int end){
 
@@ -261,6 +224,8 @@ pair<int,vector<int> > EarliestStart(Graph graph,int start,int end){
 
 void cenario2_5(Graph graph,int start,int end){
 
+    int maxflux= MaxFlux(graph,start,end);
+
     int DurMin= EarliestStart(graph,start,end).first;
     if(DurMin==-1){
         cout<<"Dados inválidos,ou vértices não existem ou não existe ligação entre os dois\n";
@@ -276,10 +241,13 @@ void cenario2_5(Graph graph,int start,int end){
     //Calcula o máximo tempo de espera de cada nó
     for (int i = start; i <=graph.getNumNodes() ; i++) {
         for (auto e : graph.nodes[i].adj) {
-            int max=ES[e.dest]-ES[i]-e.horas; // Tempo de espera= ES[nó atual] - (ES[nó anterior] + duração da aresta)
-                    if(NodeWaitTime[e.dest]<max){
-                        NodeWaitTime[e.dest]=max;
-                    }
+            if(e.flux>0){
+                int max=ES[e.dest]-ES[i]-e.horas; // Tempo de espera= ES[nó atual] - (ES[nó anterior] + duração da aresta)
+                if(NodeWaitTime[e.dest]<max){
+                    NodeWaitTime[e.dest]=max;
+                }
+            }
+
         }
     }
     int MaxWaitTime=INT_MIN;
@@ -299,16 +267,8 @@ void cenario2_5(Graph graph,int start,int end){
         cout<<i<<" ";
     }
     cout<<endl;
-
+    graph.printgraph2();
 }
 
-    /** 2.4---Tempo minimo para reagrupar no destinho
-     * Um grupo vai ripo- 1-2-4-5
-     *  e outro 1-3-4-5
-     *  Quanto tempo no minimo para todos chegarem ao destino
-     * 2.5---- TEmpo maximo de espera dos locais
-     * Cada aresta só tem 1 autocarro
-     * Quanto tempo é que o grupo que chegou primeiro vai esperar e quanto vai esperar
-     * Indicar o(s) nó(s) onde se espera e o tempo de espera
-     */
+
 #endif //DA_T2_G_CENARIO2_H
