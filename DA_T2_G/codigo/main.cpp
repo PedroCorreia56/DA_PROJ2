@@ -14,10 +14,9 @@ using namespace std;
 #include <bits/stdc++.h>
 #include <sys/time.h>
 
-
 int main(){
 
-    string grafofile("../input/in14.txt");//Ficheiro com o grafo
+    string grafofile("../input/in08_b.txt");//Ficheiro com o grafo
     string line;//string que guarda as linhas do ficheiro
 
     ifstream input_file(grafofile);
@@ -30,8 +29,8 @@ int main(){
     //leitura do grafo
     std::getline(input_file,line);
     char *dup = strdup(line.c_str());
-    int N=atoi(strtok(dup," "));//número de vértices
-    int R=atoi(strtok(NULL," "));//número de ramos
+    int N=atoi(strtok(dup," "));  //número de vértices
+    int R=atoi(strtok(NULL," ")); //número de ramos
 
 
     Graph grafo(N,true);
@@ -171,6 +170,7 @@ int main(){
         cout<<"Indique o vértice de origem e o vértice de destino:";
         cin>>start>>end;
 
+
         int maxflux=MaxFlux(grafo,start,end);
         if(maxflux==0){
             cout<<"Erro nos dados inseridos, nós não existem ou não existe ligação entre os dois\n";
@@ -178,7 +178,25 @@ int main(){
         }
         cout<<"Caminho a ser usado:\n";
         grafo.printgraph3();
-        cenario2_5(grafo,start,end);
+
+struct timespec starta, enda;
+        clock_gettime(CLOCK_MONOTONIC, &starta);
+
+        ios_base::sync_with_stdio(false);
+        int temporeunir= EarliestStart(grafo,start,end).first;
+        clock_gettime(CLOCK_MONOTONIC, &enda);
+        double time_taken;
+        time_taken = (enda.tv_sec - starta.tv_sec) * 1e9;
+        time_taken = (time_taken + (enda.tv_nsec - starta.tv_nsec)) * 1e-9;
+
+        cout << "Time taken by program is : " << fixed
+             << time_taken << setprecision(9);
+        cout << " sec" << endl;
+        if(temporeunir==-1 || temporeunir==0){
+            cout<<"Erro nos dados inseridos, nós não existem ou não existe ligação entre os dois\n";
+            return 0;
+        }
+        cout<<"Tempo que se reunem: "<<temporeunir<<"h"<<endl;
 
     }
     else{
