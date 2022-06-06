@@ -182,6 +182,7 @@ pair<int,vector<int> > EarliestStart(Graph graph,int start,int end){
 
     for (int i = start; i <=graph.getNumNodes() ; i++) {
         for (auto e : graph.nodes[i].adj) {
+            if(e.flux>0)
                 GrauE[e.dest]=GrauE[e.dest]+1;
         }
     }
@@ -206,6 +207,7 @@ pair<int,vector<int> > EarliestStart(Graph graph,int start,int end){
         if(v==end)
             break;
         for (auto w : graph.nodes[v].adj) {
+            if(w.flux>0){
                 if(ES[w.dest]<ES[v]+w.horas){
                     ES[w.dest]=ES[v]+w.horas;
                     parent[w.dest]=v;
@@ -214,6 +216,7 @@ pair<int,vector<int> > EarliestStart(Graph graph,int start,int end){
                 GrauE[w.dest]=GrauE[w.dest]-1;
                 if(GrauE[w.dest]==0)
                     S.push(w.dest);
+            }
 
         }
 
